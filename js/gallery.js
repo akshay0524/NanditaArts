@@ -369,7 +369,7 @@
 
     // Card click -> Product detail page
     card.addEventListener('click', () => {
-      window.location.href = `/product?id=${product.id}`;
+      window.location.href = `product.html?id=${product.id}`;
     });
 
     return card;
@@ -483,7 +483,7 @@
     modal.querySelector('.quick-view__dims').textContent = `${product.dims} · ${product.medium}`;
     modal.querySelector('.quick-view__price').textContent = `$${product.price.toLocaleString()}`;
     modal.querySelector('.quick-view__desc').textContent = product.description || 'Handcrafted original fine art layered with heavy pigments and palette knife texture.';
-    modal.querySelector('.quick-view__detail-link').href = `/product?id=${product.id}`;
+    modal.querySelector('.quick-view__detail-link').href = `product.html?id=${product.id}`;
 
     const addBtn = modal.querySelector('.quick-view__add-to-cart');
     if (addBtn) {

@@ -735,13 +735,23 @@ img, .product-card img, .carousel-item img, .category-tile__img, .quick-view img
     padding-inline: var(--space-6);
   }
   .editorial-cat-link--bold {
-    font-size: clamp(2.1rem, 9.2vw, 3.6rem);
+    font-size: clamp(1.4rem, 6.2vw, 2.5rem);
+    letter-spacing: 0.04em;
+    line-height: 1.15;
   }
   .editorial-cat-link--script {
-    font-size: clamp(2.4rem, 10vw, 4rem);
+    font-size: clamp(1.75rem, 7.2vw, 2.8rem);
+    line-height: 1.15;
   }
   .editorial-cat-link--serif-italic {
-    font-size: clamp(2.2rem, 9.5vw, 3.7rem);
+    font-size: clamp(1.5rem, 6.5vw, 2.6rem);
+    line-height: 1.15;
+  }
+
+  @media (max-width: 380px) {
+    .editorial-cat-link--bold { font-size: 1.25rem; }
+    .editorial-cat-link--script { font-size: 1.45rem; }
+    .editorial-cat-link--serif-italic { font-size: 1.3rem; }
   }
 
   /* On mobile: hide corner-pinned polaroids — they overlap text on narrow screens.

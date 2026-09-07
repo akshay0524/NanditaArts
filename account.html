@@ -177,21 +177,42 @@
           '<button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;color:#c9a84c;font-size:18px;cursor:pointer;" aria-label="Dismiss">&times;</button>';
         document.body.prepend(banner);
 
-        // Populate with demo data
-        const demoUser = { name: 'Demo Collector', email: 'demo@nanditaarts.com', isAdmin: false };
+        // Populate with logged-in or demo user data
+        const savedUser = JSON.parse(sessionStorage.getItem('na_collector_user') || 'null');
+        const demoUser = savedUser || { name: 'Eleanor Vance', email: 'eleanor.vance@artcollector.com', isAdmin: false };
         document.getElementById('accName').textContent = demoUser.name;
         document.getElementById('accEmail').textContent = demoUser.email;
-        document.getElementById('avatarLetter').textContent = 'D';
+        document.getElementById('avatarLetter').textContent = (demoUser.name || 'C')[0].toUpperCase();
 
-        // Show any last demo order from checkout
+        // Load demo orders (including any placed during checkout or sample artwork acquisition)
+        let ordersList = JSON.parse(localStorage.getItem('na_orders') || '[]');
         const lastOrder = JSON.parse(localStorage.getItem('na_last_order') || 'null');
-        const ordersPanel = document.getElementById('ordersListEl') || document.querySelector('.orders-panel');
-        if (ordersPanel && lastOrder) {
-          ordersPanel.innerHTML = '<p style="color:var(--color-beige);font-size:var(--fs-sm);margin-bottom:var(--space-4);">Showing your last demo order:</p>' + ordersPanel.innerHTML;
-        } else if (ordersPanel) {
-          const empty = ordersPanel.querySelector('#noOrdersMsg');
-          if (empty) empty.style.display = 'block';
+        if (lastOrder && !ordersList.some(o => o.id === lastOrder.id)) {
+          ordersList.unshift(lastOrder);
         }
+        if (ordersList.length === 0) {
+          ordersList = [{
+            id: 'NA-2024-8492',
+            createdAt: new Date().toISOString(),
+            status: 'Delivered',
+            total: 1450.00,
+            items: [{
+              title: 'Crimson Reverie',
+              dims: '30×40"',
+              qty: 1,
+              price: 1450,
+              img: 'assets/images/p1.jpg'
+            }],
+            shippingAddress: {
+              address: '742 Evergreen Terrace',
+              city: 'San Francisco',
+              state: 'CA',
+              zip: '94102'
+            },
+            payment: { cardBrand: 'Visa', cardLast4: '4242' }
+          }];
+        }
+        renderOrders(ordersList);
         return;
       }
 

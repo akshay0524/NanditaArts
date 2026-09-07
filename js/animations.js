@@ -528,7 +528,7 @@
             caption.textContent = `${painting.title} · ${painting.cat}`;
           }
           if (link) {
-            link.href = `/gallery?category=${encodeURIComponent(painting.cat)}`;
+            link.href = `gallery.html?category=${encodeURIComponent(painting.cat)}`;
           }
 
           // Fade in smoothly via CSS transition
