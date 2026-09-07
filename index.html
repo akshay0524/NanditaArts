@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nandita Arts — Original Abstract Paintings & Fine Art Prints</title>
+  <meta name="description" content="Discover original abstract paintings, home décor art, and museum-quality giclée prints by artist Nandita Albright. Each piece is a unique, handcrafted work of art.">
+  <meta property="og:title" content="Nandita Arts — Original Paintings by Nandita Albright">
+  <meta property="og:description" content="Original abstract paintings, oil & acrylic art, and giclée prints. Shop directly from the artist.">
+  <meta name="theme-color" content="#1a1a18">
+  <script>
+    (function(){
+      var s = localStorage.getItem('na_theme');
+      var p = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', s || p);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+    /* ── Page-specific styles ── */
+    .radial-glow {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 60% 20%, rgba(201,168,76,0.06) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Category section */
+    .categories-section { background: var(--color-surface); }
+
+    /* About section background */
+    .about-section-wrap {
+      background: linear-gradient(135deg, var(--color-base) 0%, var(--color-surface) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .about-section-wrap::before {
+      content: '';
+      position: absolute;
+      right: -10%;
+      top: -20%;
+      width: 50%;
+      height: 140%;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Instagram grid */
+    .instagram-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 4px;
+    }
+    .instagram-cell {
+      aspect-ratio: 1/1;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+    }
+    .instagram-cell img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform var(--duration-slow) var(--ease-spring), filter var(--duration-normal);
+      filter: saturate(0.8);
+    }
+    .instagram-cell:hover img {
+      transform: scale(1.08);
+      filter: saturate(1.1);
+    }
+    .instagram-cell__overlay {
+      position: absolute; inset: 0;
+      background: var(--overlay-dark);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transition: opacity var(--duration-normal);
+    }
+    .instagram-cell:hover .instagram-cell__overlay { opacity: 1; }
+    .instagram-cell__overlay svg { width: 28px; height: 28px; color: white; }
+    @media (max-width: 768px) {
+      .instagram-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* Process section */
+    .process-section {
+      background: var(--color-base);
+      position: relative;
+      overflow: hidden;
+      padding-block: var(--space-32);
+      text-align: center;
+    }
+    .process-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url('assets/images/hero.jpg') center/cover no-repeat;
+      opacity: 0.08;
+      filter: grayscale(1);
+    }
+
+    /* Sticky bar on product detail */
+    .product-sticky-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--overlay-card);
+      backdrop-filter: blur(16px);
+      border-top: var(--border-subtle);
+      padding: var(--space-4) var(--space-8);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: var(--z-sticky);
+      transform: translateY(100%);
+      transition: transform var(--duration-normal) var(--ease-spring);
+    }
+    .product-sticky-bar.is-visible { transform: translateY(0); }
+    @media (max-width: 768px) {
+      .product-sticky-bar { padding: var(--space-3) var(--space-4); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Radial background glow -->
+  <div class="radial-glow" aria-hidden="true"></div>
+
+  <!-- Page transition overlay -->
+  <div id="page-transition" aria-hidden="true"></div>
+
+  <!-- ══ ANNOUNCEMENT BAR ══ -->
+  <div class="announcement-bar" role="banner">
+    <span>Free insured shipping on orders over $200 · Use code <strong>TAKE10</strong> for 10% off your first order</span>
+    <button class="announcement-bar__close" aria-label="Dismiss announcement">✕</button>
+  </div>
+
+  <!-- ══ NAVIGATION ══ -->
+  <nav class="nav has-announcement" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <!-- Logo -->
+      <a href="index.html" class="nav__logo" aria-label="Nandita Arts home">
+        <span class="brand-mark" title="Nandita Albright Studio">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.71a.996.996 0 0 0-1.41 0l-9.5 9.5c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l9.5-9.5c.39-.39.39-1.02 0-1.41z"/>
+          </svg>
+        </span>
+        <div class="nav__logo-text">
+          Nandita Arts
+          <span class="nav__logo-sub">Original Fine Art</span>
+        </div>
+      </a>
+
+      <!-- Desktop links -->
+      <ul class="nav__links" role="list">
+        <li><a href="gallery.html" class="nav__link">Collection</a></li>
+        <li><a href="/gallery?category=Abstract" class="nav__link">Abstract</a></li>
+        <li><a href="/gallery?category=Landscape" class="nav__link">Landscape</a></li>
+        <li><a href="/gallery?category=Gicl%C3%A9e%20Prints" class="nav__link">Prints</a></li>
+        <li><a href="/#about" class="nav__link">About Nandita</a></li>
+      </ul>
+
+      <!-- Actions -->
+      <div class="nav__actions">
+        <!-- Dark / Light Theme Toggle -->
+        <button class="theme-toggle-btn nav__icon-btn" aria-label="Switch Theme" title="Toggle Light/Dark Gallery">
+          <svg class="theme-toggle-btn__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-toggle-btn__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <button id="searchBtn" class="nav__icon-btn" aria-label="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        </button>
+        <a href="account.html" class="nav__icon-btn" aria-label="My account" title="Collector Account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+        <button id="cartBtn" class="nav__icon-btn" aria-label="Shopping cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="nav__cart-badge" aria-live="polite">0</span>
+        </button>
+        <button class="nav__hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile nav -->
+  <div class="nav__mobile" id="mobileNav" role="dialog" aria-label="Mobile menu">
+    <ul class="nav__mobile-links" role="list">
+      <li><a href="gallery.html" class="nav__mobile-link">View Collection</a></li>
+      <li><a href="/gallery?category=Abstract" class="nav__mobile-link">Abstract Art</a></li>
+      <li><a href="/gallery?category=Landscape" class="nav__mobile-link">Landscapes</a></li>
+      <li><a href="/gallery?category=Flower" class="nav__mobile-link">Botanicals</a></li>
+      <li><a href="/gallery?category=Gicl%C3%A9e%20Prints" class="nav__mobile-link">Giclée Prints</a></li>
+      <li><a href="/#about" class="nav__mobile-link">About Nandita</a></li>
+      <li><a href="cart.html" class="nav__mobile-link">Shopping Cart</a></li>
+      <li><a href="account.html" class="nav__mobile-link">Collector Account</a></li>
+    </ul>
+  </div>
+
+  <!-- ══ HERO ══ -->
+  <section class="hero" aria-label="Hero">
+    <div class="hero__bg" data-parallax="0.15">
+      <img src="assets/images/hero.jpg" alt="Abstract painting — rich crimson and gold impasto knife work" fetchpriority="high">
+    </div>
+    <div class="hero__overlay"></div>
+    <div class="hero__content">
+      <span class="overline hero__eyebrow">Studio Fine Art by Nandita Albright</span>
+      <h1 class="hero__title">
+        <span class="hero__title-script">Where Intuition</span>
+        <span class="hero__title-bold">MEETS HEAVY PIGMENT</span>
+        <span class="hero__title-sub">on Canvas</span>
+      </h1>
+      <p class="hero__subtitle">Tactile palette knife textures, luminous oil glazes, and quiet meditative moments. Shipped directly from my studio to your home with a personal Certificate of Authenticity.</p>
+      <div class="hero__actions">
+        <a href="gallery.html" class="btn btn--primary btn--lg btn--arrow">Explore the Collection</a>
+        <a href="#about" class="btn btn--outline btn--lg">The Artist's Story</a>
+      </div>
+    </div>
+    <div class="hero__scroll-indicator" aria-hidden="true">
+      <span>Scroll</span>
+      <div class="hero__scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ══ FEATURED NEW ARRIVALS (drag carousel) ══ -->
+  <section class="section carousel-section" aria-labelledby="featured-title">
+    <div class="carousel-header">
+      <div>
+        <span class="overline section__eyebrow">Just Added</span>
+        <h2 id="featured-title" class="section__title">New Arrivals</h2>
+      </div>
+      <div class="carousel-controls">
+        <button class="carousel-btn carousel-btn--prev" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="carousel-btn carousel-btn--next" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="featured-track carousel-track-wrap" role="region" aria-label="New arrivals carousel">
+      <div class="carousel-track" style="gap: var(--space-5);">
+        <!-- Populated by gallery.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ BOLD EDITORIAL "EXPLORE BY CATEGORY" CHAPTER BREAK ══ -->
+  <section class="editorial-category-section" id="editorialCategories" aria-label="Explore by Category">
+    <div class="editorial-category-section__bg-overlay" aria-hidden="true"></div>
+
+    <!-- Organic Top Transition Wave -->
+    <div class="editorial-divider-top" aria-hidden="true">
+      <svg viewBox="0 0 1440 64" fill="none" preserveAspectRatio="none">
+        <path d="M0,0 L1440,0 L1440,24 Q720,64 0,24 Z" />
+      </svg>
+    </div>
+
+    <!-- Header / Eyebrow -->
+    <div class="editorial-category-section__header">
+      <span class="editorial-category-section__eyebrow">✦ Studio Portfolio &amp; Genres ✦</span>
+    </div>
+
+    <!-- Header / Eyebrow -->
+    <div class="editorial-category-section__header">
+      <span class="editorial-category-section__eyebrow">✦ Studio Portfolio &amp; Genres ✦</span>
+    </div>
+
+    <!-- Scattered Polaroid Painting Thumbnails with independent parallax -->
+    <div class="editorial-polaroids-container" aria-hidden="true">
+      <!-- Polaroid 1: Top Left -->
+      <div class="editorial-polaroid-wrap editorial-polaroid-wrap--1" data-speed="0.28">
+        <a href="/gallery?category=Abstract" class="editorial-polaroid editorial-polaroid--float-1" tabindex="-1">
+          <img src="assets/images/p1.jpg" alt="Crimson Reverie" loading="lazy">
+          <div class="editorial-polaroid__caption">Crimson Reverie · Abstract</div>
+        </a>
+      </div>
+
+      <!-- Polaroid 2: Top Right -->
+      <div class="editorial-polaroid-wrap editorial-polaroid-wrap--2" data-speed="-0.32">
+        <a href="/gallery?category=Seascape" class="editorial-polaroid editorial-polaroid--float-2" tabindex="-1">
+          <img src="assets/images/p4.jpg" alt="Oceanic Drift" loading="lazy">
+          <div class="editorial-polaroid__caption">Oceanic Drift · Seascape</div>
+        </a>
+      </div>
+
+      <!-- Polaroid 3: Mid Left -->
+      <div class="editorial-polaroid-wrap editorial-polaroid-wrap--3" data-speed="0.22">
+        <a href="/gallery?category=Flower" class="editorial-polaroid editorial-polaroid--float-3" tabindex="-1">
+          <img src="assets/images/p3.jpg" alt="Bloom & Scatter" loading="lazy">
+          <div class="editorial-polaroid__caption">Bloom &amp; Scatter · Floral</div>
+        </a>
+      </div>
+
+      <!-- Polaroid 4: Mid Right -->
+      <div class="editorial-polaroid-wrap editorial-polaroid-wrap--4" data-speed="-0.26">
+        <a href="/gallery?category=Cityscape" class="editorial-polaroid editorial-polaroid--float-1" tabindex="-1">
+          <img src="assets/images/p2.jpg" alt="Urban Nocturne" loading="lazy">
+          <div class="editorial-polaroid__caption">Urban Nocturne · Cityscape</div>
+        </a>
+      </div>
+
+      <!-- Polaroid 5: Lower Left -->
+      <div class="editorial-polaroid-wrap editorial-polaroid-wrap--5" data-speed="0.24">
+        <a href="/gallery?category=Landscape" class="editorial-polaroid editorial-polaroid--float-2" tabindex="-1">
+          <img src="assets/images/p6.jpg" alt="Golden Meadow" loading="lazy">
+          <div class="editorial-polaroid__caption">Golden Meadow · Landscape</div>
+        </a>
+      </div>
+
+      <!-- Polaroid 6: Lower Right -->
+      <div class="editorial-polaroid-wrap editorial-polaroid-wrap--6" data-speed="-0.20">
+        <a href="/gallery?category=Jackson%20Pollock%20Style" class="editorial-polaroid editorial-polaroid--float-3" tabindex="-1">
+          <img src="assets/images/p5.jpg" alt="Jazz Composition" loading="lazy">
+          <div class="editorial-polaroid__caption">Jazz Composition · Modern</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Giant Stacked Typography List -->
+    <div class="editorial-cat-list" role="list">
+      <div class="editorial-cat-item" data-drift="-0.08" data-category="Abstract" role="listitem">
+        <a href="/gallery?category=Abstract" data-category="Abstract" class="editorial-cat-link editorial-cat-link--bold">ABSTRACT</a>
+      </div>
+      <div class="editorial-cat-item" data-drift="0.10" data-category="Landscape" role="listitem">
+        <a href="/gallery?category=Landscape" data-category="Landscape" class="editorial-cat-link editorial-cat-link--script">Landscape Vista</a>
+      </div>
+      <div class="editorial-cat-item" data-drift="-0.06" data-category="Flower" role="listitem">
+        <a href="/gallery?category=Flower" data-category="Flower" class="editorial-cat-link editorial-cat-link--bold">FLORAL &amp; BOTANICAL</a>
+      </div>
+      <div class="editorial-cat-item" data-drift="0.12" data-category="Cityscape" role="listitem">
+        <a href="/gallery?category=Cityscape" data-category="Cityscape" class="editorial-cat-link editorial-cat-link--serif-italic">Cityscape Nocturne</a>
+      </div>
+      <div class="editorial-cat-item" data-drift="-0.10" data-category="Seascape" role="listitem">
+        <a href="/gallery?category=Seascape" data-category="Seascape" class="editorial-cat-link editorial-cat-link--bold">OCEAN &amp; SEASCAPE</a>
+      </div>
+      <div class="editorial-cat-item" data-drift="0.08" data-category="Texture" role="listitem">
+        <a href="/gallery?category=Texture" data-category="Texture" class="editorial-cat-link editorial-cat-link--script">Impasto &amp; Texture</a>
+      </div>
+      <div class="editorial-cat-item" data-drift="-0.07" data-category="Jackson Pollock Style" role="listitem">
+        <a href="/gallery?category=Jackson%20Pollock%20Style" data-category="Jackson Pollock Style" class="editorial-cat-link editorial-cat-link--bold">POLLOCK ACTION STYLE</a>
+      </div>
+      <div class="editorial-cat-item" data-drift="0.11" data-category="Giclée Prints" role="listitem">
+        <a href="/gallery?category=Gicl%C3%A9e%20Prints" data-category="Giclée Prints" class="editorial-cat-link editorial-cat-link--serif-italic">Museum Giclée Prints</a>
+      </div>
+    </div>
+
+    <!-- Bottom Explore Button -->
+    <div class="editorial-category-section__action">
+      <a href="gallery.html" class="btn btn--editorial">Explore All 13 Categories →</a>
+    </div>
+
+    <!-- Organic Bottom Transition Wave -->
+    <div class="editorial-divider-bottom" aria-hidden="true">
+      <svg viewBox="0 0 1440 64" fill="none" preserveAspectRatio="none">
+        <path d="M0,40 Q720,0 1440,40 L1440,64 L0,64 Z" />
+      </svg>
+    </div>
+  </section>
+
+  <!-- ══ CATEGORY SHOWCASE ══ -->
+  <section class="section categories-section" aria-labelledby="categories-title">
+    <div class="container">
+      <div class="section__header reveal">
+        <span class="overline section__eyebrow">Browse by Style</span>
+        <h2 id="categories-title" class="section__title">Find Your Piece</h2>
+      </div>
+      <div class="category-grid">
+        <a href="gallery.html?cat=Abstract" class="category-tile reveal stagger-1">
+          <div class="category-tile__inner">
+            <img class="category-tile__img" src="assets/images/p1.jpg" alt="Abstract paintings" loading="lazy" decoding="async"
+                 sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw">
+            <div class="category-tile__overlay"></div>
+            <div class="category-tile__content">
+              <div class="category-tile__label">Abstract</div>
+              <div class="category-tile__count">14 works</div>
+              <div class="category-tile__arrow">Shop Collection →</div>
+            </div>
+          </div>
+        </a>
+        <a href="gallery.html?cat=Seascape" class="category-tile reveal stagger-2">
+          <div class="category-tile__inner">
+            <img class="category-tile__img" src="assets/images/p4.jpg" alt="Seascape paintings" loading="lazy" decoding="async"
+                 sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw">
+            <div class="category-tile__overlay"></div>
+            <div class="category-tile__content">
+              <div class="category-tile__label">Seascape</div>
+              <div class="category-tile__count">8 works</div>
+              <div class="category-tile__arrow">Shop →</div>
+            </div>
+          </div>
+        </a>
+        <a href="gallery.html?cat=Flower" class="category-tile reveal stagger-3">
+          <div class="category-tile__inner">
+            <img class="category-tile__img" src="assets/images/p3.jpg" alt="Flower paintings" loading="lazy" decoding="async"
+                 sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw">
+            <div class="category-tile__overlay"></div>
+            <div class="category-tile__content">
+              <div class="category-tile__label">Flower</div>
+              <div class="category-tile__count">11 works</div>
+              <div class="category-tile__arrow">Shop →</div>
+            </div>
+          </div>
+        </a>
+        <a href="gallery.html?cat=Cityscape" class="category-tile reveal stagger-4">
+          <div class="category-tile__inner">
+            <img class="category-tile__img" src="assets/images/p2.jpg" alt="Cityscape paintings" loading="lazy" decoding="async"
+                 sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw">
+            <div class="category-tile__overlay"></div>
+            <div class="category-tile__content">
+              <div class="category-tile__label">Cityscape</div>
+              <div class="category-tile__count">6 works</div>
+              <div class="category-tile__arrow">Shop →</div>
+            </div>
+          </div>
+        </a>
+        <a href="gallery.html?cat=Giclée Prints" class="category-tile reveal stagger-5">
+          <div class="category-tile__inner">
+            <img class="category-tile__img" src="assets/images/p1.jpg" alt="Giclée prints" loading="lazy" decoding="async"
+                 sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw">
+            <div class="category-tile__overlay"></div>
+            <div class="category-tile__content">
+              <div class="category-tile__label">Giclée Prints</div>
+              <div class="category-tile__count">20+ prints from $185</div>
+              <div class="category-tile__arrow">Shop Prints →</div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ RECURRING CTA BAND 1 ══ -->
+  <section class="recurring-cta-band reveal">
+    <div class="container recurring-cta-band__inner">
+      <div class="recurring-cta-band__content">
+        <span class="recurring-cta-band__eyebrow">Original Studio Art</span>
+        <h3 class="recurring-cta-band__title">Want an original piece handcrafted for your space?</h3>
+        <p class="recurring-cta-band__subtitle">Every canvas is individually textured, signed by Nandita, and accompanied by a Certificate of Authenticity.</p>
+      </div>
+      <div class="recurring-cta-band__action">
+        <a href="gallery.html" class="btn btn--primary btn--lg btn--arrow">Explore Available Works</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PROCESS / QUOTE ══ -->
+  <section class="process-section" aria-labelledby="process-title">
+    <div class="container container--narrow" style="position:relative; z-index:1;">
+      <div class="reveal">
+        <span class="overline">The Philosophy</span>
+        <blockquote>
+          <p class="display-2" style="color:var(--color-off-white); margin-top:var(--space-6); max-width:22ch; margin-inline:auto;">
+            "Every brushstroke is a <em style="color:var(--color-gold);">conversation</em> between the soul and the canvas."
+          </p>
+          <cite style="display:block; margin-top:var(--space-6); font-size:var(--fs-sm); color:var(--color-beige-dim); letter-spacing:var(--ls-wider); text-transform:uppercase; font-style:normal;">— Nandita Albright</cite>
+        </blockquote>
+        <div class="divider divider--center" style="margin-top:var(--space-8);"></div>
+        <a href="gallery.html" class="btn btn--primary btn--lg btn--arrow" style="margin-top:var(--space-8);">Browse the Collection</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ABOUT THE ARTIST ══ -->
+  <section id="about" class="section section--lg about-section-wrap" aria-labelledby="about-title">
+    <div class="container">
+      <div class="about-section">
+        <div class="about-image reveal-left">
+          <div class="about-image__main polaroid-signature">
+            <div class="polaroid-signature__tape" aria-hidden="true"></div>
+            <img src="assets/images/artist.jpg" alt="Nandita Albright in her studio" loading="lazy" decoding="async"
+                 sizes="(max-width: 768px) 100vw, 50vw">
+            <div class="polaroid-signature__caption">Nandita in her California studio · 2026</div>
+          </div>
+        </div>
+        <div class="about-content reveal-right">
+          <span class="overline section__eyebrow">Meet the Artist</span>
+          <h2 id="about-title" class="section__title" style="margin-top:var(--space-3);">Nandita Albright</h2>
+          <div class="divider"></div>
+          <p class="body-lg" style="color:var(--color-beige); margin-bottom:var(--space-5);">
+            Nandita Albright is a self-taught artist whose work draws from the raw energy of the Abstract Expressionists and the meditative traditions of South Asian art. Based in the United States, she has been creating original paintings for over two decades.
+          </p>
+          <p style="color:var(--color-beige-dim); font-size:var(--fs-base); line-height:var(--lh-relaxed); margin-bottom:var(--space-6);">
+            Her paintings inhabit a space where structure dissolves into gesture — where chaos and calm coexist on a single canvas. Working primarily in acrylic and oil, Nandita builds up rich, textured surfaces with palette knives and brushes, creating layers that invite the viewer to look deeper.
+          </p>
+          <p style="color:var(--color-beige-dim); font-size:var(--fs-base); line-height:var(--lh-relaxed);">
+            Each piece in her collection is an original, one-of-a-kind work, signed and shipped directly from her studio to your home.
+          </p>
+
+          <!-- Animated SVG signature -->
+          <div class="about-content__signature" aria-label="Nandita's signature">
+            <svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10,45 C20,10 35,5 45,20 C55,35 60,15 75,10 C90,5 95,35 105,30 C115,25 120,10 135,15 C150,20 155,40 165,35 C175,30 185,20 195,25"
+                stroke="#c9a84c" stroke-width="2" fill="none" stroke-linecap="round"
+                style="stroke-dasharray:500;stroke-dashoffset:500;transition:stroke-dashoffset 2.5s cubic-bezier(0.22,1,0.36,1)"/>
+            </svg>
+          </div>
+
+          <div class="about-stats">
+            <div class="about-stat">
+              <div class="about-stat__number" data-counter data-suffix="+">500</div>
+              <div class="about-stat__label">Paintings Sold</div>
+            </div>
+            <div class="about-stat">
+              <div class="about-stat__number" data-counter data-suffix="+">20</div>
+              <div class="about-stat__label">Years Creating</div>
+            </div>
+            <div class="about-stat">
+              <div class="about-stat__number" data-counter data-suffix="">5★</div>
+              <div class="about-stat__label">Average Rating</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ TESTIMONIALS ══ -->
+  <section class="section testimonials-section" aria-labelledby="testimonials-title">
+    <div class="section__header section__header--center reveal">
+      <span class="overline section__eyebrow">What Collectors Say</span>
+      <h2 id="testimonials-title" class="section__title">Loved Around the World</h2>
+    </div>
+    <div style="overflow:hidden; margin-top:var(--space-10);">
+      <div class="testimonials-auto-track" style="display:flex; gap:var(--space-5); will-change:transform;">
+        <!-- Reviews -->
+        <div class="testimonial-card">
+          <div class="testimonial-card__stars">★★★★★</div>
+          <p class="testimonial-card__text">"Nandita's work transformed our living room. The 'Crimson Reverie' piece has a depth and energy that photographs simply cannot capture. Absolutely stunning."</p>
+          <div class="testimonial-card__author">
+            <div class="testimonial-card__avatar">S</div>
+            <div>
+              <div class="testimonial-card__name">Sarah M.</div>
+              <div class="testimonial-card__location">New York, NY</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-card__stars">★★★★★</div>
+          <p class="testimonial-card__text">"I purchased a giclée print first, then came back for an original. The quality, packaging, and personal note from Nandita made it such a special experience."</p>
+          <div class="testimonial-card__author">
+            <div class="testimonial-card__avatar">R</div>
+            <div>
+              <div class="testimonial-card__name">Robert K.</div>
+              <div class="testimonial-card__location">London, UK</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-card__stars">★★★★★</div>
+          <p class="testimonial-card__text">"The seascape painting I ordered arrived perfectly packaged and looked even more vibrant in person. Fast shipping, beautiful art, exceptional artist."</p>
+          <div class="testimonial-card__author">
+            <div class="testimonial-card__avatar">L</div>
+            <div>
+              <div class="testimonial-card__name">Linda T.</div>
+              <div class="testimonial-card__location">Sydney, AU</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-card__stars">★★★★★</div>
+          <p class="testimonial-card__text">"Nandita's flower series is breathtaking. I bought two paintings and will definitely be coming back. Her use of texture is unlike anything I've seen online."</p>
+          <div class="testimonial-card__author">
+            <div class="testimonial-card__avatar">A</div>
+            <div>
+              <div class="testimonial-card__name">Anya P.</div>
+              <div class="testimonial-card__location">Chicago, IL</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-card__stars">★★★★★</div>
+          <p class="testimonial-card__text">"The 'Urban Nocturne' painting is a conversation starter every time guests visit. Museum quality, shipped safely, and at a price I'd expect to pay three times more."</p>
+          <div class="testimonial-card__author">
+            <div class="testimonial-card__avatar">M</div>
+            <div>
+              <div class="testimonial-card__name">Marcus D.</div>
+              <div class="testimonial-card__location">Toronto, CA</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ RECURRING CTA BAND 2 ══ -->
+  <section class="recurring-cta-band reveal">
+    <div class="container recurring-cta-band__inner">
+      <div class="recurring-cta-band__content">
+        <span class="recurring-cta-band__eyebrow">Collector Favorites</span>
+        <h3 class="recurring-cta-band__title">Transform your interior with evocative textures.</h3>
+        <p class="recurring-cta-band__subtitle">Enjoy complimentary insured worldwide shipping on all orders over $200 with bespoke studio packaging.</p>
+      </div>
+      <div class="recurring-cta-band__action">
+        <a href="gallery.html" class="btn btn--primary btn--lg btn--arrow">Shop the Collection</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ INSTAGRAM FEED ══ -->
+  <section class="section--sm" aria-labelledby="instagram-title">
+    <div class="section__header section__header--center reveal" style="margin-bottom:var(--space-6);">
+      <span class="overline section__eyebrow">@nanditaarts</span>
+      <h2 id="instagram-title" class="section__title">Follow the Studio</h2>
+    </div>
+    <div class="instagram-grid">
+      <div class="instagram-cell"><img src="assets/images/p1.jpg" alt="Abstract painting in studio" loading="lazy"><div class="instagram-cell__overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div></div>
+      <div class="instagram-cell"><img src="assets/images/p2.jpg" alt="Oil painting cityscape" loading="lazy"><div class="instagram-cell__overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div></div>
+      <div class="instagram-cell"><img src="assets/images/p3.jpg" alt="Flower painting" loading="lazy"><div class="instagram-cell__overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div></div>
+      <div class="instagram-cell"><img src="assets/images/p4.jpg" alt="Seascape painting" loading="lazy"><div class="instagram-cell__overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div></div>
+      <div class="instagram-cell"><img src="assets/images/artist.jpg" alt="Artist in studio" loading="lazy"><div class="instagram-cell__overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div></div>
+      <div class="instagram-cell"><img src="assets/images/p1.jpg" alt="Abstract painting detail" loading="lazy"><div class="instagram-cell__overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div></div>
+    </div>
+    <div style="text-align:center; margin-top:var(--space-6);">
+      <a href="https://instagram.com/nanditaarts" target="_blank" rel="noopener" class="btn btn--ghost btn--arrow">Follow on Instagram</a>
+    </div>
+  </section>
+
+  <!-- ══ NEWSLETTER ══ -->
+  <section class="section section--sm" aria-labelledby="newsletter-title">
+    <div class="container container--narrow">
+      <div class="newsletter reveal">
+        <span class="overline">Stay Connected</span>
+        <h2 id="newsletter-title" class="section__title" style="margin-top:var(--space-3);">First to Know</h2>
+        <p class="section__subtitle" style="margin-inline:auto; text-align:center;">New paintings, studio stories, and exclusive collector discounts delivered to your inbox.</p>
+        <form class="newsletter__form" onsubmit="handleNewsletterSubmit(event)">
+          <input class="newsletter__input" type="email" name="email" placeholder="your@email.com" aria-label="Email address" autocomplete="email" required>
+          <button class="btn btn--primary" type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <div style="font-family:var(--font-display); font-size:var(--fs-xl); color:var(--color-off-white);">Nandita Arts</div>
+          <p>Original paintings and fine art prints by Nandita Albright. Each piece is handcrafted with passion and shipped directly from the artist's studio.</p>
+          <div class="footer__social">
+            <a href="https://instagram.com/nanditaarts" class="footer__social-link" aria-label="Instagram" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="https://facebook.com/nanditaarts" class="footer__social-link" aria-label="Facebook" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            </a>
+            <a href="https://pinterest.com/nanditaarts" class="footer__social-link" aria-label="Pinterest" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.04-2.83.18-.77 1.22-5.17 1.22-5.17s-.31-.62-.31-1.54c0-1.45.84-2.53 1.88-2.53.89 0 1.32.67 1.32 1.47 0 .89-.57 2.23-.87 3.47-.25 1.04.52 1.88 1.53 1.88 1.84 0 3.07-2.35 3.07-5.13 0-2.12-1.43-3.6-3.47-3.6-2.36 0-3.75 1.77-3.75 3.6 0 .71.27 1.47.61 1.89.07.08.08.15.06.23l-.22.9c-.03.14-.11.17-.25.1-1.43-.67-2.33-2.77-2.33-4.46 0-3.62 2.63-6.95 7.58-6.95 3.98 0 7.08 2.84 7.08 6.63 0 3.96-2.49 7.14-5.95 7.14-1.16 0-2.25-.6-2.63-1.31l-.71 2.67c-.26.99-.95 2.23-1.41 2.99.01 0 .02.01.04.01C12.07 22 12.04 22 12 22c-5.52 0-10-4.48-10-10S6.48 2 12 2z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div>
+          <div class="footer__col-title">Shop</div>
+          <ul class="footer__col-links" role="list">
+            <li><a href="gallery.html" class="footer__col-link">All Paintings</a></li>
+            <li><a href="gallery.html?cat=Abstract" class="footer__col-link">Abstract</a></li>
+            <li><a href="gallery.html?cat=Landscape" class="footer__col-link">Landscape</a></li>
+            <li><a href="gallery.html?cat=Flower" class="footer__col-link">Flowers</a></li>
+            <li><a href="gallery.html?cat=Giclée Prints" class="footer__col-link">Giclée Prints</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-title">Information</div>
+          <ul class="footer__col-links" role="list">
+            <li><a href="#about" class="footer__col-link">About the Artist</a></li>
+            <li><a href="#" class="footer__col-link">Commissions</a></li>
+            <li><a href="#" class="footer__col-link">Shipping & Returns</a></li>
+            <li><a href="#" class="footer__col-link">Care Instructions</a></li>
+            <li><a href="#" class="footer__col-link">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-title">Contact</div>
+          <ul class="footer__col-links" role="list">
+            <li><a href="mailto:hello@nanditaarts.com" class="footer__col-link">hello@nanditaarts.com</a></li>
+            <li><a href="#" class="footer__col-link">Custom Commissions</a></li>
+            <li><a href="#" class="footer__col-link">Wholesale Inquiries</a></li>
+            <li><a href="#" class="footer__col-link">Press Kit</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span class="footer__copy">© 2024 Nandita Arts. All rights reserved. Original works by Nandita Albright.</span>
+        <div style="display:flex; gap:var(--space-5);">
+          <a href="#" class="footer__col-link">Privacy Policy</a>
+          <a href="#" class="footer__col-link">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ══ QUICK VIEW MODAL ══ -->
+  <div class="quick-view" role="dialog" aria-modal="true" aria-label="Quick view" id="quickViewModal">
+    <div class="quick-view__backdrop"></div>
+    <div class="quick-view__panel">
+      <button class="quick-view__close" aria-label="Close quick view">✕</button>
+      <div class="quick-view__grid">
+        <div class="quick-view__image">
+          <img class="quick-view__product-image" src="" alt="" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <div>
+          <div class="quick-view__category overline"></div>
+          <h3 class="quick-view__title" style="font-family:var(--font-display);font-size:var(--fs-2xl);font-weight:300;margin-top:var(--space-2);color:var(--color-off-white);"></h3>
+          <div class="quick-view__dims" style="color:var(--color-beige-dim);font-size:var(--fs-sm);margin-top:var(--space-2);"></div>
+          <div class="quick-view__price" style="font-family:var(--font-display);font-size:var(--fs-2xl);font-weight:300;color:var(--color-off-white);margin-top:var(--space-4);"></div>
+          <div style="margin-top:var(--space-6); display:flex; flex-direction:column; gap:var(--space-3);">
+            <button class="btn btn--primary btn--wide quick-view__add-to-cart">Add to Cart</button>
+            <a href="product.html" class="btn btn--outline btn--wide">View Full Details</a>
+          </div>
+          <div style="margin-top:var(--space-6);padding-top:var(--space-4);border-top:var(--border-subtle); color:var(--color-beige-dim); font-size:var(--fs-xs); line-height:var(--lh-relaxed);">
+            <div style="margin-bottom:var(--space-2);">✓ Certificate of Authenticity included</div>
+            <div style="margin-bottom:var(--space-2);">✓ Ships within 5–7 business days</div>
+            <div>✓ Free returns within 14 days</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SEARCH OVERLAY ══ -->
+  <div class="search-overlay" role="search" aria-label="Search" id="searchOverlay">
+    <button class="search-overlay__close" aria-label="Close search">✕</button>
+    <div class="search-overlay__input-wrap">
+      <input class="search-overlay__input" type="search" placeholder="Search paintings…" aria-label="Search">
+    </div>
+    <p style="color:var(--color-beige-dim);font-size:var(--fs-sm);margin-top:var(--space-6);">Try: "abstract", "seascape", "flower", "giclée"</p>
+  </div>
+
+  <!-- ══ CART DRAWER ══ -->
+  <div class="cart-drawer__backdrop"></div>
+  <div class="cart-drawer" role="complementary" aria-label="Shopping cart">
+    <div class="cart-drawer__header">
+      <h2 class="cart-drawer__title">Your Cart</h2>
+      <button class="cart-drawer__close nav__icon-btn" aria-label="Close cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cart-drawer__body"></div>
+    <div class="cart-drawer__footer">
+      <div class="cart-drawer__subtotal">
+        <span>Subtotal</span>
+        <span class="cart-drawer__subtotal-value">$0</span>
+      </div>
+      <a href="cart.html" class="btn btn--outline btn--wide" style="margin-bottom:var(--space-2);">View Art Cart</a>
+      <a href="checkout.html" class="btn btn--primary btn--wide btn--lg">Proceed to Checkout</a>
+      <p style="text-align:center;margin-top:var(--space-3);font-size:var(--fs-xs);color:var(--color-beige-dim);">Free insured shipping on orders over $200</p>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/gallery.js" defer></script>
+  <script src="js/carousel.js" defer></script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/animations.js" defer></script>
+  <script>
+    function handleNewsletterSubmit(e) {
+      e.preventDefault();
+      window.NanditaArts?.showToast('You\'re subscribed! Welcome to the studio.');
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>

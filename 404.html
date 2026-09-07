@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canvas Not Found — Nandita Arts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    body {
+      padding-top: var(--nav-height);
+      background: var(--color-base);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .not-found-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: var(--space-16) var(--space-4);
+      background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(207, 166, 70, 0.08) 0%, transparent 70%);
+    }
+    .not-found-card {
+      max-width: 520px;
+    }
+  </style>
+</head>
+<body>
+  <!-- ══ NAVIGATION ══ -->
+  <nav class="nav is-scrolled" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo" aria-label="Nandita Arts home">
+        <div class="nav__logo-text">Nandita Arts<span class="nav__logo-sub">Original Studio Art</span></div>
+      </a>
+      <ul class="nav__links" role="list">
+        <li><a href="gallery.html" class="nav__link">Collection</a></li>
+        <li><a href="cart.html" class="nav__link">Cart</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="not-found-wrap">
+    <div class="not-found-card">
+      <div style="font-family:var(--font-display);font-size:clamp(5rem,10vw,8rem);color:var(--color-gold);line-height:1;margin-bottom:var(--space-2);font-weight:300;">
+        404
+      </div>
+      <span class="overline" style="color:var(--color-gold);">Blank Canvas</span>
+      <h1 style="font-family:var(--font-display);font-size:var(--fs-2xl);color:var(--color-off-white);margin-top:var(--space-2);margin-bottom:var(--space-4);">This Piece Has Wandered Off</h1>
+      <p style="color:var(--color-beige);font-size:var(--fs-sm);line-height:var(--lh-relaxed);margin-bottom:var(--space-8);">
+        The painting or page you are searching for might have found a new home in a private collector's sanctuary, or the link may be mistyped.
+      </p>
+      <div style="display:flex;gap:var(--space-4);justify-content:center;flex-wrap:wrap;">
+        <a href="gallery.html" class="btn btn--primary btn--lg">Explore the Current Collection</a>
+        <a href="index.html" class="btn btn--outline btn--lg">Return to Homepage</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

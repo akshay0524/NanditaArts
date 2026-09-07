@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In & Collector Account — Nandita Arts</title>
+  <meta name="description" content="Sign in to your Nandita Arts collector account to track orders, manage saved shipping addresses, or access your studio profile.">
+  <script>
+    (function(){
+      var s = localStorage.getItem('na_theme');
+      var p = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', s || p);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    body { padding-top: var(--nav-height); background: var(--color-base); }
+    .auth-page-wrap {
+      min-height: calc(100vh - var(--nav-height));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-12) var(--space-4);
+      background: radial-gradient(ellipse 60% 50% at 50% 30%, rgba(207, 166, 70, 0.06) 0%, transparent 70%);
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: var(--border-subtle);
+      padding: var(--space-10) var(--space-8);
+      box-shadow: var(--shadow-xl);
+    }
+    .auth-tabs {
+      display: flex;
+      border-bottom: var(--border-subtle);
+      margin-bottom: var(--space-8);
+    }
+    .auth-tab {
+      flex: 1;
+      text-align: center;
+      padding-bottom: var(--space-3);
+      font-size: var(--fs-xs);
+      letter-spacing: var(--ls-wide);
+      text-transform: uppercase;
+      color: var(--color-beige-dim);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all var(--duration-fast);
+    }
+    .auth-tab.is-active {
+      color: var(--color-gold);
+      border-bottom-color: var(--color-gold);
+      font-weight: var(--fw-medium);
+    }
+    .form-group {
+      margin-bottom: var(--space-5);
+    }
+    .form-group label {
+      display: block;
+      font-size: var(--fs-xs);
+      letter-spacing: var(--ls-wide);
+      text-transform: uppercase;
+      color: var(--color-beige);
+      margin-bottom: var(--space-2);
+    }
+    .form-group input {
+      width: 100%;
+      background: var(--color-surface-2);
+      border: 1px solid rgba(214, 203, 182, 0.15);
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-4);
+      color: var(--color-off-white);
+      font-size: var(--fs-sm);
+      outline: none;
+      transition: border-color var(--duration-fast);
+    }
+    .form-group input:focus {
+      border-color: var(--color-gold);
+      background: rgba(47, 45, 39, 0.95);
+    }
+    .auth-error {
+      background: rgba(224, 82, 82, 0.12);
+      border: 1px solid var(--color-error);
+      color: #ff9999;
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-4);
+      font-size: var(--fs-xs);
+      margin-bottom: var(--space-4);
+      display: none;
+    }
+    .auth-error.is-visible { display: block; }
+  </style>
+</head>
+<body>
+  <!-- ══ NAVIGATION ══ -->
+  <nav class="nav is-scrolled" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo" aria-label="Nandita Arts home">
+        <span class="brand-mark" title="Nandita Albright Studio">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.71a.996.996 0 0 0-1.41 0l-9.5 9.5c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l9.5-9.5c.39-.39.39-1.02 0-1.41z"/>
+          </svg>
+        </span>
+        <div class="nav__logo-text">Nandita Arts<span class="nav__logo-sub">Original Fine Art</span></div>
+      </a>
+      <ul class="nav__links" role="list">
+        <li><a href="gallery.html" class="nav__link">Collection</a></li>
+        <li><a href="/#about" class="nav__link">About</a></li>
+      </ul>
+      <div class="nav__actions">
+        <!-- Dark / Light Theme Toggle -->
+        <button class="theme-toggle-btn nav__icon-btn" aria-label="Switch Theme" title="Toggle Light/Dark Gallery">
+          <svg class="theme-toggle-btn__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-toggle-btn__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <a href="cart.html" class="nav__icon-btn" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="nav__cart-badge">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="auth-page-wrap">
+    <div class="auth-card">
+      <div style="text-align:center;margin-bottom:var(--space-6);">
+        <span class="overline" style="color:var(--color-gold);">Studio &amp; Collector Portal</span>
+        <h1 style="font-family:var(--font-display);font-size:var(--fs-2xl);color:var(--color-off-white);margin-top:var(--space-2);" id="authHeading">Sign In</h1>
+      </div>
+
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab is-active" id="tabSignIn" role="tab" aria-selected="true">Sign In</button>
+        <button class="auth-tab" id="tabRegister" role="tab" aria-selected="false">Create Account</button>
+      </div>
+
+      <div class="auth-error" id="authError" role="alert"></div>
+
+      <!-- Sign In Form -->
+      <form id="signInForm">
+        <div class="form-group">
+          <label for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" placeholder="yourname@example.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="loginPass">Password</label>
+          <input type="password" id="loginPass" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn--primary btn--wide btn--lg" id="btnSubmitLogin" style="margin-top:var(--space-2);">Sign In</button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="registerForm" style="display:none;">
+        <div class="form-group">
+          <label for="regName">Full Name</label>
+          <input type="text" id="regName" placeholder="Your Name" required autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label for="regEmail">Email Address</label>
+          <input type="email" id="regEmail" placeholder="yourname@example.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="regPass">Create Password</label>
+          <input type="password" id="regPass" placeholder="Minimum 6 characters" required autocomplete="new-password">
+        </div>
+        <button type="submit" class="btn btn--primary btn--wide btn--lg" id="btnSubmitReg" style="margin-top:var(--space-2);">Create Collector Account</button>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    // Static/GitHub Pages demo-mode detection
+    (function () {
+      const h = window.location.hostname;
+      const isStatic = h !== 'localhost' && h !== '127.0.0.1' && !h.startsWith('192.168');
+      if (!isStatic) return;
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const banner = document.createElement('div');
+        banner.id = 'staticDemoBanner';
+        banner.setAttribute('role', 'status');
+        banner.style.cssText = [
+          'position:fixed','top:0','left:0','right:0','z-index:9999',
+          'background:linear-gradient(90deg,#1a1400,#2a1f00)',
+          'border-bottom:1px solid rgba(201,168,76,0.4)',
+          'padding:10px 20px',
+          'display:flex','align-items:center','gap:12px',
+          'font-size:13px','color:#e8d5a3','font-family:system-ui,sans-serif'
+        ].join(';');
+        banner.innerHTML =
+          '<span style="font-size:16px;">🎨</span>' +
+          '<span><strong style="color:#c9a84c;">Portfolio Demo Mode</strong>' +
+          ' — Login &amp; account features require the Node.js backend. ' +
+          '<a href="https://github.com/akshay0524/NanditaArts" target="_blank" rel="noopener" style="color:#c9a84c;text-decoration:underline;">View source</a></span>' +
+          '<button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;color:#c9a84c;font-size:18px;cursor:pointer;" aria-label="Dismiss">&times;</button>';
+        document.body.prepend(banner);
+
+        // Intercept form submissions to show a demo response instead of a failed API call
+        document.getElementById('signInForm')?.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const err = document.getElementById('authError');
+          if (err) {
+            err.textContent = 'Demo Mode: Authentication requires the live Node.js server. Explore the gallery and cart — they work fully in this static version!';
+            err.classList.add('is-visible');
+          }
+        }, true);
+        document.getElementById('registerForm')?.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const err = document.getElementById('authError');
+          if (err) {
+            err.textContent = 'Demo Mode: Account creation requires the live Node.js server. Explore the gallery and cart — they work fully in this static version!';
+            err.classList.add('is-visible');
+          }
+        }, true);
+      });
+    })();
+  </script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/theme.js"></script>
+  <script src="js/animations.js" defer></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tabSignIn = document.getElementById('tabSignIn');
+      const tabRegister = document.getElementById('tabRegister');
+      const signInForm = document.getElementById('signInForm');
+      const registerForm = document.getElementById('registerForm');
+      const authHeading = document.getElementById('authHeading');
+      const authError = document.getElementById('authError');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const returnUrl = urlParams.get('returnUrl') || '';
+
+      function showError(msg) {
+        if (authError) {
+          authError.textContent = msg;
+          authError.classList.add('is-visible');
+        }
+      }
+      function clearError() {
+        if (authError) authError.classList.remove('is-visible');
+      }
+
+      tabSignIn?.addEventListener('click', () => {
+        tabSignIn.classList.add('is-active');
+        tabRegister.classList.remove('is-active');
+        signInForm.style.display = 'block';
+        registerForm.style.display = 'none';
+        authHeading.textContent = 'Sign In';
+        clearError();
+      });
+
+      tabRegister?.addEventListener('click', () => {
+        tabRegister.classList.add('is-active');
+        tabSignIn.classList.remove('is-active');
+        registerForm.style.display = 'block';
+        signInForm.style.display = 'none';
+        authHeading.textContent = 'Create Collector Account';
+        clearError();
+      });
+
+      // Login submission
+      signInForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearError();
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPass').value;
+
+        try {
+          const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Login failed.');
+
+          // If admin, server specifies /dashboard. If customer, redirect to returnUrl or /account
+          if (data.redirect) {
+            window.location.href = data.redirect;
+          } else if (returnUrl) {
+            window.location.href = returnUrl;
+          } else {
+            window.location.href = '/account';
+          }
+        } catch (err) {
+          showError(err.message);
+        }
+      });
+
+      // Registration submission
+      registerForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearError();
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPass').value;
+
+        try {
+          const res = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Registration failed.');
+
+          window.location.href = returnUrl || '/account';
+        } catch (err) {
+          showError(err.message);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

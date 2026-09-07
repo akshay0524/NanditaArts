@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /api/admin
+Disallow: /checkout
+Disallow: /order-confirmation
+
+Sitemap: https://nanditaarts.com/sitemap.xml

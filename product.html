@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crimson Reverie — Nandita Arts</title>
+  <meta name="description" content="Original abstract painting by Nandita Albright. Vibrant crimson and gold, acrylic on canvas, 24×36 inches.">
+  <script>
+    (function(){
+      var s = localStorage.getItem('na_theme');
+      var p = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', s || p);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+    body { padding-top: var(--nav-height); }
+    .product-page-wrap {
+      min-height: 100vh;
+    }
+    .product-sticky-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--overlay-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: var(--border-subtle);
+      padding: var(--space-4) var(--space-8);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: var(--z-sticky);
+      transform: translateY(100%);
+      transition: transform var(--duration-normal) var(--ease-spring);
+      will-change: transform;
+    }
+    .product-sticky-bar.is-visible { transform: translateY(0); }
+    .sticky-bar__info {
+      display: flex;
+      flex-direction: column;
+    }
+    .sticky-bar__title {
+      font-family: var(--font-display);
+      font-size: var(--fs-lg);
+      color: var(--color-off-white);
+    }
+    .sticky-bar__price {
+      font-size: var(--fs-sm);
+      color: var(--color-beige-dim);
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-5);
+    }
+    @media (max-width: 1024px) { .related-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .related-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .related-grid { grid-template-columns: 1fr; } }
+
+    .trust-badges {
+      display: flex;
+      gap: var(--space-5);
+      flex-wrap: wrap;
+      margin-top: var(--space-5);
+      padding-top: var(--space-5);
+      border-top: var(--border-subtle);
+    }
+    .trust-badge {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--fs-xs);
+      color: var(--color-beige-dim);
+    }
+    .trust-badge svg {
+      width: 16px;
+      height: 16px;
+      color: var(--color-gold);
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Page transition -->
+  <div id="page-transition" aria-hidden="true"></div>
+
+  <!-- ══ NAVIGATION ══ -->
+  <nav class="nav is-scrolled" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo" aria-label="Nandita Arts home">
+        <span class="brand-mark" title="Nandita Albright Studio">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.71a.996.996 0 0 0-1.41 0l-9.5 9.5c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l9.5-9.5c.39-.39.39-1.02 0-1.41z"/>
+          </svg>
+        </span>
+        <div class="nav__logo-text">Nandita Arts<span class="nav__logo-sub">Original Studio Art</span></div>
+      </a>
+      <ul class="nav__links" role="list">
+        <li><a href="gallery.html" class="nav__link">Collection</a></li>
+        <li><a href="/gallery?category=Abstract" class="nav__link">Abstract</a></li>
+        <li><a href="/gallery?category=Landscape" class="nav__link">Landscape</a></li>
+        <li><a href="/gallery?category=Gicl%C3%A9e%20Prints" class="nav__link">Prints</a></li>
+        <li><a href="/#about" class="nav__link">About Nandita</a></li>
+      </ul>
+      <div class="nav__actions">
+        <!-- Dark / Light Theme Toggle -->
+        <button class="theme-toggle-btn nav__icon-btn" aria-label="Switch Theme" title="Toggle Light/Dark Gallery">
+          <svg class="theme-toggle-btn__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-toggle-btn__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <a href="account.html" class="nav__icon-btn" aria-label="My Account" title="My Account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+        <button id="cartBtn" class="nav__icon-btn" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="nav__cart-badge">0</span>
+        </button>
+        <button class="nav__hamburger" id="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="nav__mobile" id="mobileNav">
+    <ul class="nav__mobile-links" role="list">
+      <li><a href="gallery.html" class="nav__mobile-link">View Collection</a></li>
+      <li><a href="/gallery?category=Abstract" class="nav__mobile-link">Abstract Art</a></li>
+      <li><a href="/gallery?category=Landscape" class="nav__mobile-link">Landscapes</a></li>
+      <li><a href="cart.html" class="nav__mobile-link">Cart</a></li>
+      <li><a href="account.html" class="nav__mobile-link">Collector Account</a></li>
+      <li><a href="/#about" class="nav__mobile-link">About the Artist</a></li>
+    </ul>
+  </div>
+
+  <main class="product-page-wrap">
+    <!-- Breadcrumb -->
+    <div class="container" style="padding-top:var(--space-5);padding-bottom:0;">
+      <nav aria-label="Breadcrumb">
+        <ol style="display:flex;gap:var(--space-2);font-size:var(--fs-xs);color:var(--color-beige-dim);" role="list">
+          <li><a href="index.html" style="transition:color 150ms;" onmouseover="this.style.color='var(--color-off-white)'" onmouseout="this.style.color='var(--color-beige-dim)'">Home</a></li>
+          <li style="opacity:0.4;">/</li>
+          <li><a href="gallery.html" style="transition:color 150ms;" onmouseover="this.style.color='var(--color-off-white)'" onmouseout="this.style.color='var(--color-beige-dim)'">Paintings</a></li>
+          <li style="opacity:0.4;">/</li>
+          <li class="product-info__category" style="color:var(--color-off-white);">Abstract</li>
+        </ol>
+      </nav>
+    </div>
+
+    <!-- Product detail grid -->
+    <div class="container">
+      <div class="product-detail">
+        <!-- Gallery column -->
+        <div class="product-gallery" aria-label="Product images">
+          <div class="product-gallery__main" role="button" tabindex="0" aria-label="Click to zoom">
+            <img src="assets/images/p1.jpg" alt="Crimson Reverie painting" fetchpriority="high">
+          </div>
+          <div class="product-gallery__thumbs" role="list">
+            <div class="product-gallery__thumb is-active" role="listitem">
+              <img src="assets/images/p1.jpg" alt="View 1">
+            </div>
+            <div class="product-gallery__thumb" role="listitem">
+              <img src="assets/images/p2.jpg" alt="View 2">
+            </div>
+            <div class="product-gallery__thumb" role="listitem">
+              <img src="assets/images/p3.jpg" alt="Detail shot">
+            </div>
+            <div class="product-gallery__thumb" role="listitem">
+              <img src="assets/images/p4.jpg" alt="Room view">
+            </div>
+          </div>
+        </div>
+
+        <!-- Info column -->
+        <div class="product-info">
+          <div class="overline product-info__category">Abstract</div>
+          <h1 class="product-info__title" style="font-family:var(--font-display);font-size:clamp(2rem,4vw,3.5rem);font-weight:300;color:var(--color-off-white);margin-top:var(--space-2);line-height:1.1;">Crimson Reverie</h1>
+
+          <!-- Stars -->
+          <div style="display:flex;align-items:center;gap:var(--space-3);margin-top:var(--space-3);">
+            <div style="color:var(--color-gold);font-size:14px;">★★★★★</div>
+            <span style="font-size:var(--fs-xs);color:var(--color-beige-dim);">4.9 (23 reviews)</span>
+          </div>
+
+          <!-- Price -->
+          <div class="product-info__price-row">
+            <span class="product-info__price">$1,200</span>
+            <span style="font-size:var(--fs-sm);color:var(--color-beige-dim);">Original · One of a kind</span>
+          </div>
+
+          <!-- Meta grid -->
+          <div class="product-info__meta">
+            <div class="product-meta-item">
+              <div class="product-meta-item__label">Dimensions</div>
+              <div class="product-meta-item__value product-info__dim-val">24 × 36 inches</div>
+            </div>
+            <div class="product-meta-item">
+              <div class="product-meta-item__label">Medium</div>
+              <div class="product-meta-item__value product-info__medium-val">Acrylic on Canvas</div>
+            </div>
+            <div class="product-meta-item">
+              <div class="product-meta-item__label">Style</div>
+              <div class="product-meta-item__value">Abstract Expressionist</div>
+            </div>
+            <div class="product-meta-item">
+              <div class="product-meta-item__label">Availability</div>
+              <div class="product-meta-item__value" style="color:var(--color-success);">In Stock</div>
+            </div>
+          </div>
+
+          <!-- Quantity & Add to cart -->
+          <div class="product-info__add-to-cart">
+            <div class="product-info__quantity" role="group" aria-label="Quantity">
+              <button class="product-info__qty-btn product-info__qty-dec" aria-label="Decrease quantity">−</button>
+              <span class="product-info__qty-value" aria-live="polite">1</span>
+              <button class="product-info__qty-btn product-info__qty-inc" aria-label="Increase quantity">+</button>
+            </div>
+            <button class="btn btn--primary btn--lg" style="flex:1;" id="addToCartBtn">Add to Cart</button>
+            <button class="btn btn--outline btn--icon" aria-label="Add to wishlist" id="wishlistBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            </button>
+          </div>
+
+          <!-- Trust badges -->
+          <div class="trust-badges">
+            <div class="trust-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>Certificate of Authenticity</span>
+            </div>
+            <div class="trust-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              <span>Free US Shipping</span>
+            </div>
+            <div class="trust-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+              <span>14-day Returns</span>
+            </div>
+          </div>
+
+          <!-- Accordion -->
+          <div class="accordion" style="margin-top:var(--space-6);">
+            <div class="accordion-item">
+              <button class="accordion-trigger is-open" aria-expanded="true">
+                About This Painting
+                <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+              <div class="accordion-body is-open">
+                <div class="accordion-content">
+                  <p style="margin-bottom:var(--space-3);">"Crimson Reverie" is a powerfully expressive work born from a period of intense creative energy. Nandita built up multiple layers of rich crimson, burnt orange, and gold leaf using palette knives and wide brushes, creating a surface that catches light in constantly shifting ways.</p>
+                  <p>No two viewings of this painting are the same — the texture creates shadows and highlights that move with the time of day. This is an original, one-of-a-kind piece.</p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger" aria-expanded="false">
+                Shipping & Delivery
+                <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+              <div class="accordion-body">
+                <div class="accordion-content">
+                  <p style="margin-bottom:var(--space-2);"><strong style="color:var(--color-off-white);">US Orders:</strong> Free shipping, ships within 5–7 business days via FedEx with tracking.</p>
+                  <p style="margin-bottom:var(--space-2);"><strong style="color:var(--color-off-white);">International:</strong> $45 flat rate. Ships within 7–10 business days.</p>
+                  <p>Each painting is carefully wrapped in acid-free paper, then secured in custom packaging with corner protectors to ensure safe arrival.</p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger" aria-expanded="false">
+                Returns & Guarantee
+                <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+              <div class="accordion-body">
+                <div class="accordion-content">
+                  <p>We want you to love your painting. If for any reason you're not satisfied, we offer a 14-day return policy from the date of delivery. The painting must be returned in original condition. Contact us at hello@nanditaarts.com to initiate a return.</p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-trigger" aria-expanded="false">
+                Care Instructions
+                <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+              <div class="accordion-body">
+                <div class="accordion-content">
+                  <p style="margin-bottom:var(--space-2);">• Avoid direct sunlight to prevent fading over time.</p>
+                  <p style="margin-bottom:var(--space-2);">• Dust gently with a soft, dry brush.</p>
+                  <p style="margin-bottom:var(--space-2);">• Do not use cleaning agents or water on the surface.</p>
+                  <p>• Store upright, not flat, if not displayed.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related products -->
+    <section class="section" aria-labelledby="related-title">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="overline section__eyebrow">More From the Studio</span>
+          <h2 id="related-title" class="section__title">You May Also Love</h2>
+        </div>
+        <div class="related-grid" id="relatedGrid">
+          <!-- Populated by gallery.js -->
+          <div class="product-card reveal stagger-1"><div class="product-card__image-wrap"><img src="assets/images/p2.jpg" alt="Urban Nocturne" loading="lazy"></div><div class="product-card__body"><div class="product-card__category">Cityscape</div><div class="product-card__title">Urban Nocturne</div><div class="product-card__price">$950</div></div></div>
+          <div class="product-card reveal stagger-2"><div class="product-card__image-wrap"><img src="assets/images/p3.jpg" alt="Bloom and Scatter" loading="lazy"></div><div class="product-card__body"><div class="product-card__category">Flower</div><div class="product-card__title">Bloom &amp; Scatter</div><div class="product-card__price">$780</div></div></div>
+          <div class="product-card reveal stagger-3"><div class="product-card__image-wrap"><img src="assets/images/p4.jpg" alt="Oceanic Drift" loading="lazy"></div><div class="product-card__body"><div class="product-card__category">Seascape</div><div class="product-card__title">Oceanic Drift</div><div class="product-card__price">$1,100</div></div></div>
+          <div class="product-card reveal stagger-4"><div class="product-card__image-wrap"><img src="assets/images/p1.jpg" alt="Jazz Composition" loading="lazy"></div><div class="product-card__body"><div class="product-card__category">Music</div><div class="product-card__title">Jazz Composition</div><div class="product-card__price">$860</div></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Sticky Add to Cart bar -->
+  <div class="product-sticky-bar" aria-label="Sticky add to cart">
+    <div class="sticky-bar__info">
+      <div class="sticky-bar__title">Crimson Reverie</div>
+      <div class="sticky-bar__price">Acrylic on Canvas · 24×36"</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:var(--space-3);">
+      <span style="font-family:var(--font-display);font-size:var(--fs-xl);color:var(--color-off-white);">$1,200</span>
+      <button class="btn btn--primary" onclick="document.getElementById('addToCartBtn').click()">Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Search overlay -->
+  <div class="search-overlay" role="search" aria-label="Search">
+    <button class="search-overlay__close" aria-label="Close search">✕</button>
+    <div class="search-overlay__input-wrap">
+      <input class="search-overlay__input" type="search" placeholder="Search paintings…" aria-label="Search">
+    </div>
+  </div>
+
+  <!-- Cart drawer -->
+  <div class="cart-drawer__backdrop"></div>
+  <div class="cart-drawer" role="complementary" aria-label="Shopping cart">
+    <div class="cart-drawer__header"><h2 class="cart-drawer__title">Your Cart</h2><button class="cart-drawer__close nav__icon-btn" aria-label="Close cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="cart-drawer__body"></div>
+    <div class="cart-drawer__footer">
+      <div class="cart-drawer__subtotal"><span>Subtotal</span><span class="cart-drawer__subtotal-value">$0</span></div>
+      <a href="cart.html" class="btn btn--outline btn--wide" style="margin-bottom:var(--space-2);">View Art Cart</a>
+      <a href="checkout.html" class="btn btn--primary btn--wide btn--lg">Checkout</a>
+    </div>
+  </div>
+
+  <script src="js/theme.js"></script>
+  <script src="js/gallery.js" defer></script>
+  <script src="js/product.js" defer></script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/animations.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Wishlist toggle
+      const wlBtn = document.getElementById('wishlistBtn');
+      if (wlBtn) {
+        wlBtn.addEventListener('click', function() {
+          const path = this.querySelector('path');
+          const isWished = path.getAttribute('fill') === 'var(--color-error)';
+          path.setAttribute('fill', isWished ? 'none' : 'var(--color-error)');
+          path.setAttribute('stroke', isWished ? 'currentColor' : 'var(--color-error)');
+          window.NanditaArts?.showToast(isWished ? 'Removed from wishlist' : 'Added to wishlist ♥');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
