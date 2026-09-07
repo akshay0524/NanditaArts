@@ -131,6 +131,12 @@
   }
 
   if (searchBtn) searchBtn.addEventListener('click', openSearch);
+  document.querySelectorAll('.trigger-search-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      closeMobileMenu();
+      setTimeout(openSearch, 150);
+    });
+  });
   if (searchClose) searchClose.addEventListener('click', closeSearch);
   if (searchOverlay) {
     searchOverlay.addEventListener('click', e => {
