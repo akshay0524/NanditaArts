@@ -200,13 +200,41 @@
         });
       }
 
-      // Loading state on submit
+      // Form submission handling
       const form = document.getElementById('artistLoginForm');
       const submitBtn = document.getElementById('loginSubmitBtn');
+      const errBox = document.getElementById('loginError');
+
       if (form && submitBtn) {
-        form.addEventListener('submit', () => {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
           submitBtn.classList.add('is-loading');
-          setTimeout(() => submitBtn.classList.remove('is-loading'), 1000);
+          if (errBox) errBox.classList.remove('is-visible');
+
+          const userVal = document.getElementById('username')?.value.trim() || '';
+          const passVal = document.getElementById('password')?.value || '';
+
+          // 1. Try server endpoint if on live Node server
+          try {
+            const res = await fetch('/api/auth/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: userVal.includes('@') ? userVal : 'nandita@nanditaarts.com', password: passVal })
+            });
+            if (res.ok) {
+              const data = await res.json();
+              window.location.href = (data.redirect || 'artist-dashboard.html').replace(/^\//, '').replace(/^dashboard$/, 'artist-dashboard.html');
+              return;
+            }
+          } catch (netErr) {
+            // Offline or on static GitHub Pages
+          }
+
+          // 2. Client-side login for GitHub Pages
+          sessionStorage.setItem('na_artist_logged_in', 'true');
+          setTimeout(() => {
+            window.location.href = 'artist-dashboard.html';
+          }, 400);
         });
       }
     });

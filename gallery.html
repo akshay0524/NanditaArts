@@ -50,8 +50,10 @@
       overflow-x: auto;
       padding-bottom: var(--space-3);
       padding-top: var(--space-4);
+      padding-right: var(--space-8);
       scrollbar-width: none;
       -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
     }
     .filter-pills-wrap::-webkit-scrollbar { display: none; }
     
@@ -60,6 +62,27 @@
       align-items: center;
       gap: var(--space-3);
       flex-wrap: wrap;
+    }
+    @media (max-width: 640px) {
+      .gallery-controls-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-3);
+      }
+      .filter-select-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-2);
+        width: 100%;
+      }
+      .filter-select-group #sortSelect {
+        grid-column: span 2;
+      }
+      .gallery-controls-bar > div:last-child {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
     }
     .filter-select {
       background: var(--color-surface);
@@ -183,14 +206,14 @@
             <path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.71a.996.996 0 0 0-1.41 0l-9.5 9.5c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l9.5-9.5c.39-.39.39-1.02 0-1.41z"/>
           </svg>
         </span>
-        <div class="nav__logo-text">Nandita Arts<span class="nav__logo-sub">Original Studio Art</span></div>
+        <div class="nav__logo-text">Nandita Arts<span class="nav__logo-sub">Original Fine Art</span></div>
       </a>
       <ul class="nav__links" role="list">
         <li><a href="gallery.html" class="nav__link is-active">Collection</a></li>
-        <li><a href="/gallery?category=Abstract" class="nav__link">Abstract</a></li>
-        <li><a href="/gallery?category=Landscape" class="nav__link">Landscape</a></li>
-        <li><a href="/gallery?category=Gicl%C3%A9e%20Prints" class="nav__link">Prints</a></li>
-        <li><a href="/#about" class="nav__link">About Nandita</a></li>
+        <li><a href="gallery.html?category=Abstract" class="nav__link">Abstract</a></li>
+        <li><a href="gallery.html?category=Landscape" class="nav__link">Landscape</a></li>
+        <li><a href="gallery.html?category=Gicl%C3%A9e%20Prints" class="nav__link">Prints</a></li>
+        <li><a href="index.html#about" class="nav__link">About Nandita</a></li>
       </ul>
       <div class="nav__actions">
         <!-- Dark / Light Theme Toggle -->
@@ -232,11 +255,11 @@
   <div class="nav__mobile" id="mobileNav">
     <ul class="nav__mobile-links" role="list">
       <li><a href="gallery.html" class="nav__mobile-link">View All Paintings</a></li>
-      <li><a href="/gallery?category=Abstract" class="nav__mobile-link">Abstract Art</a></li>
-      <li><a href="/gallery?category=Landscape" class="nav__mobile-link">Landscapes</a></li>
-      <li><a href="/gallery?category=Flower" class="nav__mobile-link">Botanicals</a></li>
-      <li><a href="/gallery?category=Gicl%C3%A9e%20Prints" class="nav__mobile-link">Giclée Prints</a></li>
-      <li><a href="/#about" class="nav__mobile-link">The Artist's Story</a></li>
+      <li><a href="gallery.html?category=Abstract" class="nav__mobile-link">Abstract Art</a></li>
+      <li><a href="gallery.html?category=Landscape" class="nav__mobile-link">Landscapes</a></li>
+      <li><a href="gallery.html?category=Flower" class="nav__mobile-link">Botanicals</a></li>
+      <li><a href="gallery.html?category=Gicl%C3%A9e%20Prints" class="nav__mobile-link">Giclée Prints</a></li>
+      <li><a href="index.html#about" class="nav__mobile-link">The Artist's Story</a></li>
       <li><a href="cart.html" class="nav__mobile-link">Cart</a></li>
       <li><a href="account.html" class="nav__mobile-link">Account / Orders</a></li>
     </ul>

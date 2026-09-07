@@ -114,7 +114,7 @@
       </a>
       <ul class="nav__links" role="list">
         <li><a href="gallery.html" class="nav__link">Collection</a></li>
-        <li><a href="/#about" class="nav__link">About</a></li>
+        <li><a href="index.html#about" class="nav__link">About</a></li>
       </ul>
       <div class="nav__actions">
         <!-- Dark / Light Theme Toggle -->
@@ -215,24 +215,6 @@
           '<a href="https://github.com/akshay0524/NanditaArts" target="_blank" rel="noopener" style="color:#c9a84c;text-decoration:underline;">View source</a></span>' +
           '<button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;color:#c9a84c;font-size:18px;cursor:pointer;" aria-label="Dismiss">&times;</button>';
         document.body.prepend(banner);
-
-        // Intercept form submissions to show a demo response instead of a failed API call
-        document.getElementById('signInForm')?.addEventListener('submit', function (e) {
-          e.preventDefault();
-          const err = document.getElementById('authError');
-          if (err) {
-            err.textContent = 'Demo Mode: Authentication requires the live Node.js server. Explore the gallery and cart — they work fully in this static version!';
-            err.classList.add('is-visible');
-          }
-        }, true);
-        document.getElementById('registerForm')?.addEventListener('submit', function (e) {
-          e.preventDefault();
-          const err = document.getElementById('authError');
-          if (err) {
-            err.textContent = 'Demo Mode: Account creation requires the live Node.js server. Explore the gallery and cart — they work fully in this static version!';
-            err.classList.add('is-visible');
-          }
-        }, true);
       });
     })();
   </script>
@@ -287,25 +269,38 @@
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPass').value;
 
+        // Try live backend if available
         try {
           const res = await fetch('/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
           });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error || 'Login failed.');
-
-          // If admin, server specifies /dashboard. If customer, redirect to returnUrl or /account
-          if (data.redirect) {
-            window.location.href = data.redirect;
-          } else if (returnUrl) {
-            window.location.href = returnUrl;
-          } else {
-            window.location.href = '/account';
+          if (res.ok) {
+            const data = await res.json();
+            if (data.redirect) {
+              window.location.href = data.redirect.replace(/^\//, '').replace(/^dashboard$/, 'artist-dashboard.html');
+            } else if (returnUrl) {
+              window.location.href = returnUrl.replace(/^\//, '').replace(/^dashboard$/, 'artist-dashboard.html');
+            } else {
+              window.location.href = 'account.html';
+            }
+            return;
           }
         } catch (err) {
-          showError(err.message);
+          // Fall through to client demo login on static hosts like GitHub Pages
+        }
+
+        // Client-side fallback for GitHub Pages static mode
+        if (email.toLowerCase().includes('nandita')) {
+          sessionStorage.setItem('na_artist_logged_in', 'true');
+          window.location.href = 'artist-dashboard.html';
+        } else {
+          sessionStorage.setItem('na_collector_user', JSON.stringify({
+            name: email.split('@')[0],
+            email: email
+          }));
+          window.location.href = 'account.html';
         }
       });
 
@@ -323,13 +318,19 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, password })
           });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error || 'Registration failed.');
-
-          window.location.href = returnUrl || '/account';
+          if (res.ok) {
+            window.location.href = (returnUrl || 'account.html').replace(/^\//, '');
+            return;
+          }
         } catch (err) {
-          showError(err.message);
+          // Fall through to client demo registration
         }
+
+        sessionStorage.setItem('na_collector_user', JSON.stringify({
+          name: name || 'Collector',
+          email: email
+        }));
+        window.location.href = 'account.html';
       });
     });
   </script>

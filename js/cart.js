@@ -35,7 +35,7 @@
           <p style="color:var(--color-beige-dim);max-width:440px;margin:0 auto var(--space-6);font-size:var(--fs-sm);line-height:var(--lh-relaxed);">
             Browse our original oil & acrylic paintings or museum-grade prints to find a piece that speaks to your sanctuary.
           </p>
-          <a href="/gallery" class="btn btn--primary btn--lg">Explore the Collection</a>
+          <a href="gallery.html" class="btn btn--primary btn--lg">Explore the Collection</a>
         </div>
       `;
       return;
@@ -69,7 +69,7 @@
                     <img src="${item.img}" alt="${item.title}" loading="lazy">
                   </div>
                   <div>
-                    <a href="/product?id=${item.id}" style="font-family:var(--font-display);font-size:var(--fs-md);color:var(--color-off-white);text-decoration:none;">${item.title}</a>
+                    <a href="product.html?id=${item.id}" style="font-family:var(--font-display);font-size:var(--fs-md);color:var(--color-off-white);text-decoration:none;">${item.title}</a>
                     <div style="font-size:var(--fs-xs);color:var(--color-beige-dim);margin-top:2px;">${item.dims} · ${item.medium}</div>
                     <button class="cart-remove-btn" data-id="${item.id}" style="background:none;border:none;color:var(--color-gold);font-size:12px;cursor:pointer;padding:0;margin-top:var(--space-2);text-decoration:underline;">Remove Artwork</button>
                   </div>
@@ -126,8 +126,8 @@
           </div>
 
           <div style="margin-top:var(--space-6);">
-            <a href="/checkout" class="btn btn--primary btn--wide btn--lg" style="text-align:center;">Proceed to Studio Checkout</a>
-            <a href="/gallery" style="display:block;text-align:center;margin-top:var(--space-4);color:var(--color-beige-dim);font-size:var(--fs-xs);text-decoration:none;">← Continue Browsing Gallery</a>
+            <a href="checkout.html" class="btn btn--primary btn--wide btn--lg" style="text-align:center;">Proceed to Studio Checkout</a>
+            <a href="gallery.html" style="display:block;text-align:center;margin-top:var(--space-4);color:var(--color-beige-dim);font-size:var(--fs-xs);text-decoration:none;">← Continue Browsing Gallery</a>
           </div>
 
           <div style="margin-top:var(--space-6);padding-top:var(--space-5);border-top:var(--border-subtle);font-size:var(--fs-xs);color:var(--color-beige-dim);line-height:var(--lh-relaxed);">
