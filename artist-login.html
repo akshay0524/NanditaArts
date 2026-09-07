@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artist Login — Nandita Arts</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/artist.css">
+  <style>
+    /* Animated background strokes */
+    .login-bg-canvas {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .login-bg-canvas svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.04;
+    }
+    .bg-stroke {
+      stroke-dasharray: 1200;
+      stroke-dashoffset: 1200;
+      animation: brushStroke 6s ease-out both;
+    }
+    .bg-stroke-2 { animation-delay: 0.8s; }
+    .bg-stroke-3 { animation-delay: 1.6s; }
+
+    /* Password toggle */
+    .password-wrap {
+      position: relative;
+    }
+    .password-wrap .form-input {
+      padding-right: var(--space-10);
+    }
+    .password-toggle {
+      position: absolute;
+      right: var(--space-4);
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-beige-dim);
+      transition: color var(--duration-fast);
+      display: flex;
+      align-items: center;
+    }
+    .password-toggle:hover { color: var(--color-off-white); }
+    .password-toggle svg { width: 16px; height: 16px; }
+
+    /* Hint text */
+    .login-hint {
+      margin-top: var(--space-8);
+      padding-top: var(--space-6);
+      border-top: var(--border-subtle);
+      text-align: center;
+      font-size: var(--fs-xs);
+      color: var(--color-beige-dim);
+      line-height: var(--lh-relaxed);
+    }
+    .login-hint a {
+      color: var(--color-gold);
+      transition: opacity var(--duration-fast);
+    }
+    .login-hint a:hover { opacity: 0.7; }
+
+    /* Loader spinner on submit */
+    .btn-spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(26,26,24,0.3);
+      border-top-color: var(--color-base);
+      border-radius: 50%;
+      animation: rotate360 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+    .btn.is-loading .btn-spinner { display: block; }
+    .btn.is-loading .btn-text { opacity: 0.7; }
+  </style>
+</head>
+<body style="background:var(--color-base); overflow:hidden;">
+
+  <!-- Animated background brushstrokes -->
+  <div class="login-bg-canvas" aria-hidden="true">
+    <svg viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <path class="bg-stroke" d="M-100,600 C200,200 400,700 700,300 C900,50 1200,500 1600,200"
+        stroke="#c9a84c" stroke-width="80" stroke-linecap="round" fill="none"/>
+      <path class="bg-stroke bg-stroke-2" d="M100,900 C300,400 600,800 900,350 C1100,100 1350,600 1550,400"
+        stroke="#f5f0e8" stroke-width="40" stroke-linecap="round" fill="none"/>
+      <path class="bg-stroke bg-stroke-3" d="M0,100 C250,500 500,50 800,450 C1000,700 1300,200 1440,500"
+        stroke="#c9a84c" stroke-width="24" stroke-linecap="round" fill="none"/>
+    </svg>
+  </div>
+
+  <!-- Radial glow -->
+  <div style="position:fixed;inset:0;background:radial-gradient(ellipse 70% 70% at 30% 70%, rgba(201,168,76,0.07) 0%, transparent 70%);pointer-events:none;" aria-hidden="true"></div>
+
+  <!-- Login card -->
+  <main class="artist-login-page" style="position:relative;z-index:1;">
+    <div class="artist-login-card" id="loginCard">
+
+      <!-- Logo -->
+      <div class="artist-login-card__logo">
+        <div class="artist-login-card__logo-text">Nandita Arts</div>
+        <div class="artist-login-card__logo-sub">Artist Studio Access</div>
+      </div>
+
+      <!-- Divider line -->
+      <div style="width:48px;height:1px;background:var(--color-gold);margin:0 auto var(--space-8);"></div>
+
+      <h1 class="artist-login-card__title">Welcome back, Nandita</h1>
+
+      <!-- Error message -->
+      <div class="login-error" id="loginError" role="alert" aria-live="assertive">
+        Incorrect username or password. Please try again.
+      </div>
+
+      <!-- Login form -->
+      <form id="artistLoginForm" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
+          <input
+            class="form-input"
+            type="text"
+            id="username"
+            name="username"
+            placeholder="nandita"
+            autocomplete="username"
+            autocapitalize="none"
+            spellcheck="false"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="password-wrap">
+            <input
+              class="form-input"
+              type="password"
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              required
+            >
+            <button type="button" class="password-toggle" id="togglePassword" aria-label="Show password">
+              <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--wide btn--lg" id="loginSubmitBtn" style="margin-top:var(--space-2);">
+          <span class="btn-spinner" aria-hidden="true"></span>
+          <span class="btn-text">Sign In to Dashboard</span>
+        </button>
+      </form>
+
+      <!-- Hint -->
+      <div class="login-hint">
+        <p>This page is for Nandita Albright only.</p>
+        <p style="margin-top:var(--space-1);">Looking to shop? <a href="index.html">Visit the gallery →</a></p>
+        <p style="margin-top:var(--space-3); opacity:0.5; font-size:10px; letter-spacing:0.05em;">
+          Demo credentials: nandita / arts2024
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/animations.js" defer></script>
+  <script src="js/artist.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Password toggle
+      const toggle = document.getElementById('togglePassword');
+      const pwInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
+
+      if (toggle && pwInput) {
+        toggle.addEventListener('click', () => {
+          const isPassword = pwInput.type === 'password';
+          pwInput.type = isPassword ? 'text' : 'password';
+          eyeIcon.innerHTML = isPassword
+            ? `<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`
+            : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+          toggle.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+        });
+      }
+
+      // Loading state on submit
+      const form = document.getElementById('artistLoginForm');
+      const submitBtn = document.getElementById('loginSubmitBtn');
+      if (form && submitBtn) {
+        form.addEventListener('submit', () => {
+          submitBtn.classList.add('is-loading');
+          setTimeout(() => submitBtn.classList.remove('is-loading'), 1000);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

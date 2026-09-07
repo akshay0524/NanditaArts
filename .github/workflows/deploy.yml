@@ -1,0 +1,44 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  # Allow manual trigger from Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Build & Deploy Static Site
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          # Exclude server-only files — never publish secrets or backend code
+          exclude_assets: |
+            .github
+            node_modules
+            server.js
+            package.json
+            package-lock.json
+            .env
+            .env.local
+            .env.production
+            data/users.json
+            data/orders.json
+          # Keep the CNAME file if you add a custom domain later
+          keep_files: false
+          # Commit message for the gh-pages branch
+          commit_message: "Deploy: ${{ github.event.head_commit.message }}"
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"

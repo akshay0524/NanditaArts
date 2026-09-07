@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Original Paintings & Studio Works — Nandita Arts</title>
+  <meta name="description" content="Explore original abstract paintings, textured oils, landscapes, florals, and limited giclée prints handcrafted by Nandita Albright. Shipped worldwide from her personal studio.">
+  <meta property="og:title" content="Original Paintings & Studio Works — Nandita Arts">
+  <meta property="og:description" content="Handcrafted original fine art and museum-grade giclée prints directly from the artist's studio.">
+  <meta property="og:type" content="website">
+  <script>
+    (function(){
+      var s = localStorage.getItem('na_theme');
+      var p = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', s || p);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+    .gallery-layout {
+      min-height: 100vh;
+      padding-top: var(--nav-height);
+    }
+    .gallery-page-header {
+      padding: var(--space-16) 0 var(--space-10);
+      text-align: center;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(207, 166, 70, 0.08) 0%, transparent 80%);
+      border-bottom: var(--border-subtle);
+      position: relative;
+    }
+    .gallery-controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-6) 0 var(--space-4);
+      border-bottom: var(--border-subtle);
+      margin-bottom: var(--space-6);
+    }
+    .filter-pills-wrap {
+      display: flex;
+      gap: var(--space-2);
+      overflow-x: auto;
+      padding-bottom: var(--space-3);
+      padding-top: var(--space-4);
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .filter-pills-wrap::-webkit-scrollbar { display: none; }
+    
+    .filter-select-group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+    .filter-select {
+      background: var(--color-surface);
+      border: var(--border-subtle);
+      border-radius: var(--radius-full);
+      padding: var(--space-2) var(--space-4);
+      font-size: var(--fs-xs);
+      color: var(--color-beige);
+      cursor: pointer;
+      outline: none;
+      transition: border-color var(--duration-fast), background var(--duration-fast);
+    }
+    .filter-select:hover, .filter-select:focus {
+      border-color: var(--color-gold);
+      background: var(--color-surface-2);
+    }
+    .active-filters-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-6);
+      min-height: 32px;
+    }
+    .filter-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      background: rgba(207, 166, 70, 0.12);
+      border: 1px solid rgba(207, 166, 70, 0.25);
+      color: var(--color-off-white);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: var(--fs-xs);
+    }
+    .filter-tag button {
+      background: none;
+      border: none;
+      color: var(--color-gold);
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      padding: 0;
+    }
+    .clear-all-btn {
+      background: none;
+      border: none;
+      color: var(--color-gold);
+      font-size: var(--fs-xs);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      padding: 4px 8px;
+    }
+    .clear-all-btn:hover {
+      color: var(--color-off-white);
+    }
+    .view-toggle {
+      display: flex;
+      gap: var(--space-1);
+    }
+    .view-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-beige-dim);
+      border: var(--border-subtle);
+      background: var(--color-surface);
+      cursor: pointer;
+      transition: all var(--duration-fast);
+    }
+    .view-btn.is-active { color: var(--color-off-white); border-color: var(--color-gold); background: var(--color-surface-2); }
+    .view-btn svg { width: 16px; height: 16px; }
+
+    /* Empty state */
+    .empty-gallery {
+      text-align: center;
+      padding: var(--space-20) var(--space-6);
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: var(--border-subtle);
+      margin-block: var(--space-8);
+      animation: fadeIn 300ms ease both;
+    }
+    .empty-gallery__icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto var(--space-4);
+      color: var(--color-gold);
+      opacity: 0.8;
+    }
+    .empty-gallery__title {
+      font-family: var(--font-display);
+      font-size: var(--fs-2xl);
+      font-weight: 400;
+      color: var(--color-off-white);
+      margin-bottom: var(--space-2);
+    }
+    .empty-gallery__desc {
+      color: var(--color-beige-dim);
+      font-size: var(--fs-sm);
+      max-width: 440px;
+      margin: 0 auto var(--space-6);
+      line-height: var(--lh-relaxed);
+    }
+  </style>
+</head>
+<body>
+  <!-- Page transition -->
+  <div id="page-transition" aria-hidden="true"></div>
+
+  <!-- ══ NAVIGATION ══ -->
+  <nav class="nav is-scrolled" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo" aria-label="Nandita Arts home">
+        <span class="brand-mark" title="Nandita Albright Studio">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.71a.996.996 0 0 0-1.41 0l-9.5 9.5c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l9.5-9.5c.39-.39.39-1.02 0-1.41z"/>
+          </svg>
+        </span>
+        <div class="nav__logo-text">Nandita Arts<span class="nav__logo-sub">Original Studio Art</span></div>
+      </a>
+      <ul class="nav__links" role="list">
+        <li><a href="gallery.html" class="nav__link is-active">Collection</a></li>
+        <li><a href="/gallery?category=Abstract" class="nav__link">Abstract</a></li>
+        <li><a href="/gallery?category=Landscape" class="nav__link">Landscape</a></li>
+        <li><a href="/gallery?category=Gicl%C3%A9e%20Prints" class="nav__link">Prints</a></li>
+        <li><a href="/#about" class="nav__link">About Nandita</a></li>
+      </ul>
+      <div class="nav__actions">
+        <!-- Dark / Light Theme Toggle -->
+        <button class="theme-toggle-btn nav__icon-btn" aria-label="Switch Theme" title="Toggle Light/Dark Gallery">
+          <svg class="theme-toggle-btn__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-toggle-btn__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <button id="searchBtn" class="nav__icon-btn" aria-label="Search paintings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        </button>
+        <a href="account.html" class="nav__icon-btn" aria-label="My Account" title="My Account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+        <button id="cartBtn" class="nav__icon-btn" aria-label="View Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="nav__cart-badge">0</span>
+        </button>
+        <button class="nav__hamburger" id="hamburger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile nav -->
+  <div class="nav__mobile" id="mobileNav">
+    <ul class="nav__mobile-links" role="list">
+      <li><a href="gallery.html" class="nav__mobile-link">View All Paintings</a></li>
+      <li><a href="/gallery?category=Abstract" class="nav__mobile-link">Abstract Art</a></li>
+      <li><a href="/gallery?category=Landscape" class="nav__mobile-link">Landscapes</a></li>
+      <li><a href="/gallery?category=Flower" class="nav__mobile-link">Botanicals</a></li>
+      <li><a href="/gallery?category=Gicl%C3%A9e%20Prints" class="nav__mobile-link">Giclée Prints</a></li>
+      <li><a href="/#about" class="nav__mobile-link">The Artist's Story</a></li>
+      <li><a href="cart.html" class="nav__mobile-link">Cart</a></li>
+      <li><a href="account.html" class="nav__mobile-link">Account / Orders</a></li>
+    </ul>
+  </div>
+
+  <main class="gallery-layout">
+    <!-- Gallery header -->
+    <header class="gallery-page-header">
+      <div class="container">
+        <span class="overline reveal">Studio Works & Curated Collection</span>
+        <h1 class="section__title reveal stagger-1" style="font-size:clamp(2.5rem,5.5vw,4.5rem); margin-top:var(--space-3); font-family:var(--font-display);">Original Fine Art</h1>
+        <p class="section__subtitle reveal stagger-2" style="margin-inline:auto; text-align:center; max-width:600px;">
+          Original paintings and museum-grade archival prints handcrafted by Nandita Albright. Shipped directly from her quiet studio with an official Certificate of Authenticity.
+        </p>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- Category filter tabs -->
+      <div class="filter-pills-wrap" id="categoryTabs" role="tablist" aria-label="Artwork Categories"></div>
+
+      <!-- Controls & secondary filters -->
+      <div class="gallery-controls-bar">
+        <div class="filter-select-group">
+          <!-- Price filter -->
+          <select id="priceFilter" class="filter-select" aria-label="Filter by Price">
+            <option value="all">All Prices</option>
+            <option value="under-500">Under $500</option>
+            <option value="500-1000">$500 – $1,000</option>
+            <option value="1000-1500">$1,000 – $1,500</option>
+            <option value="over-1500">$1,500+</option>
+          </select>
+
+          <!-- Size filter -->
+          <select id="sizeFilter" class="filter-select" aria-label="Filter by Size">
+            <option value="all">All Dimensions</option>
+            <option value="small">Small (&lt; 20")</option>
+            <option value="medium">Medium (20" – 30")</option>
+            <option value="large">Large (&gt; 30")</option>
+          </select>
+
+          <!-- Sort select -->
+          <select id="sortSelect" class="filter-select" aria-label="Sort Artworks">
+            <option value="new">Newest First</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="name">Title: A–Z</option>
+          </select>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:var(--space-4);">
+          <span class="gallery-count" id="productCountWrap">Showing <strong id="productCount">0</strong> paintings</span>
+          <div class="view-toggle">
+            <button class="view-btn is-active" aria-label="Grid view" id="gridView">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            </button>
+            <button class="view-btn" aria-label="List view" id="listView">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active filters chip row & clear button -->
+      <div class="active-filters-row" id="activeFiltersRow"></div>
+
+      <!-- Product grid container -->
+      <div class="product-grid" id="productGrid" role="list" aria-label="Artworks collection"></div>
+    </div>
+  </main>
+
+  <!-- ══ RECURRING CTA BAND ══ -->
+  <section class="recurring-cta-band reveal" style="margin-top:var(--space-12);margin-bottom:var(--space-16);">
+    <div class="container recurring-cta-band__inner">
+      <div class="recurring-cta-band__content">
+        <span class="recurring-cta-band__eyebrow">Custom Studio Commission</span>
+        <h3 class="recurring-cta-band__title">Have a custom palette or dimension in mind?</h3>
+        <p class="recurring-cta-band__subtitle">Nandita works closely with private collectors and designers to create bespoke paintings tailored specifically to your space.</p>
+      </div>
+      <div class="recurring-cta-band__action">
+        <a href="mailto:hello@nanditaarts.com?subject=Custom%20Artwork%20Inquiry" class="btn btn--primary btn--lg btn--arrow">Inquire for Commission</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ QUICK VIEW MODAL ══ -->
+  <div class="quick-view" role="dialog" aria-modal="true" aria-label="Artwork Quick View" id="quickViewModal">
+    <div class="quick-view__backdrop"></div>
+    <div class="quick-view__panel">
+      <button class="quick-view__close" aria-label="Close dialog">✕</button>
+      <div class="quick-view__grid">
+        <div class="quick-view__image">
+          <img class="quick-view__product-image" src="" alt="" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <div>
+          <div class="quick-view__category overline"></div>
+          <h3 class="quick-view__title" style="font-family:var(--font-display);font-size:var(--fs-2xl);font-weight:400;margin-top:var(--space-2);color:var(--color-off-white);"></h3>
+          <div class="quick-view__dims" style="color:var(--color-beige-dim);font-size:var(--fs-sm);margin-top:var(--space-2);"></div>
+          <div class="quick-view__price" style="font-family:var(--font-display);font-size:var(--fs-2xl);font-weight:400;color:var(--color-gold);margin-top:var(--space-4);"></div>
+          <p class="quick-view__desc" style="color:var(--color-beige);font-size:var(--fs-sm);line-height:var(--lh-relaxed);margin-top:var(--space-3);"></p>
+          <div style="margin-top:var(--space-6);display:flex;flex-direction:column;gap:var(--space-3);">
+            <button class="btn btn--primary btn--wide quick-view__add-to-cart">Add to Cart</button>
+            <a href="#" class="btn btn--outline btn--wide quick-view__detail-link">View Full Details & Story</a>
+          </div>
+          <div style="margin-top:var(--space-6);padding-top:var(--space-4);border-top:var(--border-subtle);color:var(--color-beige-dim);font-size:var(--fs-xs);line-height:var(--lh-relaxed);">
+            <div style="margin-bottom:var(--space-2);">✓ Archival Certificate of Authenticity signed by Nandita</div>
+            <div style="margin-bottom:var(--space-2);">✓ Insured studio shipping with custom wooden box packing</div>
+            <div>✓ 14-day collector satisfaction return guarantee</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SEARCH OVERLAY ══ -->
+  <div class="search-overlay" role="search" aria-label="Search collection">
+    <button class="search-overlay__close" aria-label="Close search">✕</button>
+    <div class="search-overlay__input-wrap">
+      <input class="search-overlay__input" id="gallerySearchInput" type="search" placeholder="Search by title, medium, palette, style…" aria-label="Search collection">
+    </div>
+    <p style="color:var(--color-beige-dim);font-size:var(--fs-sm);margin-top:var(--space-6);">Explore: "abstract", "knife texture", "seascape", "gold", "prints"</p>
+  </div>
+
+  <!-- ══ CART DRAWER ══ -->
+  <div class="cart-drawer__backdrop"></div>
+  <div class="cart-drawer" role="complementary" aria-label="Shopping cart">
+    <div class="cart-drawer__header">
+      <h2 class="cart-drawer__title">Your Selection</h2>
+      <button class="cart-drawer__close nav__icon-btn" aria-label="Close cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cart-drawer__body"></div>
+    <div class="cart-drawer__footer">
+      <div class="cart-drawer__subtotal">
+        <span>Subtotal</span>
+        <span class="cart-drawer__subtotal-value">$0</span>
+      </div>
+      <a href="cart.html" class="btn btn--outline btn--wide" style="margin-bottom:var(--space-2);">View Full Cart</a>
+      <a href="checkout.html" class="btn btn--primary btn--wide btn--lg">Proceed to Checkout</a>
+      <p style="text-align:center;margin-top:var(--space-3);font-size:var(--fs-xs);color:var(--color-beige-dim);">Free insured domestic shipping on orders over $200</p>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/gallery.js" defer></script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/animations.js" defer></script>
+</body>
+</html>

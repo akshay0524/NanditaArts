@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed — Nandita Arts</title>
+  <meta name="description" content="Thank you for your order from Nandita Arts Studio. Your original paintings will be custom crated and shipped.">
+  <script>
+    (function(){
+      var s = localStorage.getItem('na_theme');
+      var p = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', s || p);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    body { padding-top: var(--nav-height); background: var(--color-base); }
+    .conf-page-wrap {
+      min-height: calc(100vh - var(--nav-height));
+      padding-block: var(--space-12) var(--space-24);
+    }
+    .conf-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: var(--border-subtle);
+      max-width: 800px;
+      margin-inline: auto;
+      padding: var(--space-10) var(--space-12);
+    }
+    @media (max-width: 768px) {
+      .conf-card { padding: var(--space-6) var(--space-5); }
+    }
+    .conf-header {
+      text-align: center;
+      padding-bottom: var(--space-8);
+      border-bottom: var(--border-subtle);
+      margin-bottom: var(--space-8);
+    }
+    .conf-seal {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(94, 171, 123, 0.15);
+      border: 2px solid var(--color-success);
+      color: var(--color-success);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-4);
+    }
+    .conf-order-id-badge {
+      display: inline-block;
+      background: rgba(207, 166, 70, 0.15);
+      color: var(--color-gold);
+      border: 1px solid rgba(207, 166, 70, 0.3);
+      padding: 4px 16px;
+      border-radius: var(--radius-full);
+      font-size: var(--fs-sm);
+      letter-spacing: var(--ls-wide);
+      margin-top: var(--space-3);
+    }
+    .conf-item-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding-block: var(--space-4);
+      border-bottom: var(--border-subtle);
+    }
+    .conf-item-thumb {
+      width: 64px;
+      height: 80px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+    }
+    .conf-summary-table {
+      margin-top: var(--space-6);
+      padding-top: var(--space-6);
+      border-top: var(--border-subtle);
+    }
+    .conf-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--space-2);
+      font-size: var(--fs-sm);
+      color: var(--color-beige);
+    }
+    .conf-line--grand {
+      font-family: var(--font-display);
+      font-size: var(--fs-xl);
+      color: var(--color-gold);
+      margin-top: var(--space-4);
+      padding-top: var(--space-4);
+      border-top: var(--border-subtle);
+    }
+    @media print {
+      body { background: #fff !important; color: #000 !important; }
+      nav, .no-print { display: none !important; }
+      .conf-card { border: none !important; box-shadow: none !important; padding: 0 !important; color: #000 !important; }
+      .conf-card * { color: #000 !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ══ NAVIGATION ══ -->
+  <nav class="nav is-scrolled" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo" aria-label="Nandita Arts home">
+        <span class="brand-mark" title="Nandita Albright Studio">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.71a.996.996 0 0 0-1.41 0l-9.5 9.5c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l9.5-9.5c.39-.39.39-1.02 0-1.41z"/>
+          </svg>
+        </span>
+        <div class="nav__logo-text">Nandita Arts<span class="nav__logo-sub">Original Studio Art</span></div>
+      </a>
+      <ul class="nav__links" role="list">
+        <li><a href="gallery.html" class="nav__link">Gallery</a></li>
+        <li><a href="account.html" class="nav__link">My Account</a></li>
+      </ul>
+      <div class="nav__actions">
+        <!-- Dark / Light Theme Toggle -->
+        <button class="theme-toggle-btn nav__icon-btn" aria-label="Switch Theme" title="Toggle Light/Dark Gallery">
+          <svg class="theme-toggle-btn__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-toggle-btn__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="conf-page-wrap">
+    <div class="container">
+      <div class="conf-card" id="confCard">
+        <div class="conf-header">
+          <div class="conf-seal">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="overline" style="color:var(--color-gold);">Studio Acquisition Confirmed</span>
+          <h1 style="font-family:var(--font-display);font-size:clamp(2rem,4vw,2.75rem);color:var(--color-off-white);margin-top:var(--space-2);">Thank You for Supporting Original Art</h1>
+          <div class="conf-order-id-badge" id="confOrderIdBadge">Order ID: #NA-2024-0000</div>
+          <p style="color:var(--color-beige);max-width:540px;margin:var(--space-4) auto 0;font-size:var(--fs-sm);line-height:var(--lh-relaxed);">
+            An official order confirmation has been emailed to <strong id="confCustomerEmail" style="color:var(--color-off-white);">your email</strong>. 
+            Nandita will personal curate, sign the Certificate of Authenticity, and safely pack your artworks for insured delivery.
+          </p>
+        </div>
+
+        <!-- Ordered Artworks -->
+        <h2 style="font-family:var(--font-display);font-size:var(--fs-lg);color:var(--color-off-white);margin-bottom:var(--space-3);">Acquired Artworks</h2>
+        <div id="confItemsList"></div>
+
+        <!-- Shipping & Details Grid -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);margin-top:var(--space-6);" class="conf-details-grid">
+          <div>
+            <h3 style="font-size:var(--fs-xs);letter-spacing:var(--ls-wide);text-transform:uppercase;color:var(--color-gold);margin-bottom:var(--space-2);">Shipping Destination</h3>
+            <div id="confShippingAddr" style="font-size:var(--fs-sm);color:var(--color-beige);line-height:var(--lh-relaxed);"></div>
+          </div>
+          <div>
+            <h3 style="font-size:var(--fs-xs);letter-spacing:var(--ls-wide);text-transform:uppercase;color:var(--color-gold);margin-bottom:var(--space-2);">Payment & Transit</h3>
+            <div id="confPaymentInfo" style="font-size:var(--fs-sm);color:var(--color-beige);line-height:var(--lh-relaxed);"></div>
+          </div>
+        </div>
+
+        <!-- Financial Summary -->
+        <div class="conf-summary-table">
+          <div class="conf-line"><span>Artworks Subtotal</span><span id="confSubtotal">$0.00</span></div>
+          <div class="conf-line" id="confDiscountRow" style="display:none;color:var(--color-gold);"><span>Studio Privilege</span><span id="confDiscount">−$0.00</span></div>
+          <div class="conf-line"><span>Insured Art Shipping</span><span id="confShipping">$0.00</span></div>
+          <div class="conf-line"><span>State Tax</span><span id="confTax">$0.00</span></div>
+          <div class="conf-line conf-line--grand"><span>Total Paid</span><span id="confTotal">$0.00</span></div>
+        </div>
+
+        <!-- Actions -->
+        <div class="no-print" style="margin-top:var(--space-8);display:flex;gap:var(--space-4);flex-wrap:wrap;justify-content:center;">
+          <button onclick="window.print()" class="btn btn--outline">Print Receipt</button>
+          <a href="account.html" class="btn btn--outline">View in Collector Account</a>
+          <a href="gallery.html" class="btn btn--primary">Return to Gallery</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/theme.js"></script>
+  <script src="js/animations.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const orderIdParam = params.get('orderId');
+
+      let order = null;
+      try {
+        const stored = localStorage.getItem('na_last_order');
+        if (stored) order = JSON.parse(stored);
+      } catch (e) {}
+
+      if (order && (!orderIdParam || order.id === orderIdParam)) {
+        document.getElementById('confOrderIdBadge').textContent = `Order ID: #${order.id}`;
+        document.getElementById('confCustomerEmail').textContent = order.customer.email;
+
+        // Items
+        const itemsList = document.getElementById('confItemsList');
+        itemsList.innerHTML = order.items.map(item => `
+          <div class="conf-item-row">
+            <img src="${item.img}" alt="${item.title}" class="conf-item-thumb">
+            <div style="flex:1;">
+              <div style="font-family:var(--font-display);font-size:var(--fs-md);color:var(--color-off-white);">${item.title}</div>
+              <div style="font-size:var(--fs-xs);color:var(--color-beige-dim);">${item.dims} · ${item.medium} × ${item.qty}</div>
+            </div>
+            <div style="font-size:var(--fs-md);color:var(--color-off-white);font-weight:500;">
+              $${(item.price * item.qty).toLocaleString()}
+            </div>
+          </div>
+        `).join('');
+
+        // Shipping Addr
+        const s = order.shippingAddress;
+        document.getElementById('confShippingAddr').innerHTML = `
+          <strong>${order.customer.name}</strong><br>
+          ${s.address}${s.apt ? ', ' + s.apt : ''}<br>
+          ${s.city}, ${s.state} ${s.zip}<br>
+          ${s.country}<br>
+          <span style="font-size:12px;color:var(--color-beige-dim);">Phone: ${order.customer.phone || 'N/A'}</span>
+        `;
+
+        // Payment & Transit
+        document.getElementById('confPaymentInfo').innerHTML = `
+          Payment: <strong>${order.payment.status.toUpperCase()} (${order.payment.gateway.toUpperCase()})</strong><br>
+          Card: ${order.payment.cardBrand} •••• ${order.payment.cardLast4}<br>
+          Estimated Transit: 5–7 business days<br>
+          Status: <span style="color:var(--color-gold);">${order.status}</span>
+        `;
+
+        // Summary
+        document.getElementById('confSubtotal').textContent = '$' + order.subtotal.toLocaleString();
+        if (order.discount > 0) {
+          document.getElementById('confDiscountRow').style.display = 'flex';
+          document.getElementById('confDiscount').textContent = '−$' + order.discount.toLocaleString();
+        }
+        document.getElementById('confShipping').textContent = order.shipping === 0 ? 'FREE' : '$' + order.shipping.toFixed(2);
+        document.getElementById('confTax').textContent = '$' + order.tax.toFixed(2);
+        document.getElementById('confTotal').textContent = '$' + order.total.toLocaleString('en-US', { minimumFractionDigits: 2 });
+      } else if (orderIdParam) {
+        document.getElementById('confOrderIdBadge').textContent = `Order ID: #${orderIdParam}`;
+      }
+    });
+  </script>
+</body>
+</html>

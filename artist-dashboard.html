@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artist Dashboard — Nandita Arts</title>
+  <meta name="robots" content="noindex, nofollow">
+  <script>
+    (function(){
+      var s = localStorage.getItem('na_theme');
+      var p = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', s || p);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/artist.css">
+  <style>
+    /* Dashboard-specific overrides */
+    body { background: var(--color-base); }
+
+    /* Mobile top bar */
+    .dashboard-topbar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-5);
+      background: var(--color-surface);
+      border-bottom: var(--border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: var(--z-sticky);
+    }
+    @media (max-width: 1024px) { .dashboard-topbar { display: flex; } }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-16) var(--space-8);
+      color: var(--color-beige-dim);
+    }
+    .empty-state svg {
+      width: 64px; height: 64px;
+      margin: 0 auto var(--space-5);
+      opacity: 0.4;
+    }
+    .empty-state h3 {
+      font-family: var(--font-display);
+      font-size: var(--fs-xl);
+      font-weight: var(--fw-light);
+      color: var(--color-off-white);
+      margin-bottom: var(--space-3);
+    }
+
+    /* Panel transitions */
+    .dashboard-panel {
+      animation: fadeIn 300ms var(--ease-spring) both;
+    }
+
+    /* Upload progress bar */
+    .upload-progress {
+      height: 3px;
+      background: var(--color-surface-2);
+      border-radius: var(--radius-full);
+      margin-top: var(--space-3);
+      overflow: hidden;
+      display: none;
+    }
+    .upload-progress.is-visible { display: block; }
+    .upload-progress__bar {
+      height: 100%;
+      background: var(--color-gold);
+      border-radius: var(--radius-full);
+      transition: width 300ms var(--ease-spring);
+      width: 0%;
+    }
+
+    /* Character counter */
+    .char-counter {
+      font-size: var(--fs-xs);
+      color: var(--color-beige-dim);
+      text-align: right;
+      margin-top: var(--space-1);
+    }
+    .char-counter.is-near { color: var(--color-gold); }
+    .char-counter.is-over { color: var(--color-error); }
+
+    /* Category badges in table */
+    .cat-badge {
+      display: inline-block;
+      padding: 2px var(--space-2);
+      background: rgba(201,168,76,0.1);
+      color: var(--color-gold);
+      border-radius: 2px;
+      font-size: 10px;
+      font-weight: var(--fw-medium);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile top bar -->
+  <div class="dashboard-topbar">
+    <div style="display:flex;align-items:center;gap:var(--space-2);">
+      <span class="brand-mark" title="Nandita Albright Studio" style="width:24px;height:24px;">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.71a.996.996 0 0 0-1.41 0l-9.5 9.5c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l9.5-9.5c.39-.39.39-1.02 0-1.41z"/>
+        </svg>
+      </span>
+      <div style="font-family:var(--font-display);font-size:var(--fs-lg);color:var(--color-off-white);">Nandita Arts</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:var(--space-2);">
+      <button class="theme-toggle-btn nav__icon-btn" aria-label="Switch Theme" title="Toggle Light/Dark Studio">
+        <svg class="theme-toggle-btn__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-toggle-btn__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      <button id="dashMenuBtn" class="nav__icon-btn" aria-label="Toggle sidebar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="dashboard-layout">
+
+    <!-- ══ SIDEBAR ══ -->
+    <aside class="dashboard-sidebar" id="dashSidebar" role="navigation" aria-label="Dashboard navigation">
+      <div class="dashboard-sidebar__logo" style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:var(--space-2);">
+          <span class="brand-mark" title="Nandita Albright Studio">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.71a.996.996 0 0 0-1.41 0l-9.5 9.5c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l9.5-9.5c.39-.39.39-1.02 0-1.41z"/>
+            </svg>
+          </span>
+          <div>
+            <div class="dashboard-sidebar__logo-text">Nandita Arts</div>
+            <div class="dashboard-sidebar__logo-sub">Artist Studio</div>
+          </div>
+        </div>
+        <button class="theme-toggle-btn nav__icon-btn" aria-label="Switch Theme" title="Toggle Light/Dark Studio">
+          <svg class="theme-toggle-btn__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-toggle-btn__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="dashboard-nav">
+        <button class="dashboard-nav__item is-active" data-panel="panel-overview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Overview
+        </button>
+        <button class="dashboard-nav__item" data-panel="panel-paintings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          My Paintings
+        </button>
+        <button class="dashboard-nav__item" data-panel="panel-add">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Add New Painting
+        </button>
+        <button class="dashboard-nav__item" data-panel="panel-orders">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          Orders
+        </button>
+        <button class="dashboard-nav__item" data-panel="panel-settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          Settings
+        </button>
+
+        <div style="margin-top:auto;padding-top:var(--space-5);">
+          <a href="index.html" class="dashboard-nav__item" style="text-decoration:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            View Website
+          </a>
+        </div>
+      </nav>
+
+      <div class="dashboard-sidebar__footer">
+        <div class="dashboard-user">
+          <div class="dashboard-user__avatar">N</div>
+          <div>
+            <div class="dashboard-user__name">Nandita Albright</div>
+            <div class="dashboard-user__role">Artist</div>
+          </div>
+          <button class="dashboard-logout" aria-label="Log out">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ══ MAIN CONTENT ══ -->
+    <main class="dashboard-main" id="dashMain">
+
+      <!-- ── OVERVIEW PANEL ── -->
+      <div class="dashboard-panel" id="panel-overview">
+        <div class="dashboard-header">
+          <div>
+            <h1 class="dashboard-title">Good morning, Nandita ✦</h1>
+            <p class="dashboard-subtitle">Here's what's happening in your studio today.</p>
+          </div>
+          <button class="btn btn--primary" id="addNewBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Painting
+          </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="dashboard-stats">
+          <div class="stat-card reveal">
+            <div class="stat-card__label">Total Paintings</div>
+            <div class="stat-card__value" id="stat-total">0</div>
+            <div class="stat-card__change">In your collection</div>
+          </div>
+          <div class="stat-card reveal stagger-1">
+            <div class="stat-card__label">Published</div>
+            <div class="stat-card__value" id="stat-published">0</div>
+            <div class="stat-card__change" style="color:var(--color-success);">Live in gallery</div>
+          </div>
+          <div class="stat-card reveal stagger-2">
+            <div class="stat-card__label">Drafts</div>
+            <div class="stat-card__value" id="stat-drafts">0</div>
+            <div class="stat-card__change">Saved drafts</div>
+          </div>
+          <div class="stat-card reveal stagger-3">
+            <div class="stat-card__label">Categories</div>
+            <div class="stat-card__value">13</div>
+            <div class="stat-card__change">Available styles</div>
+          </div>
+        </div>
+
+        <!-- Recent paintings preview -->
+        <div class="paintings-table-wrap">
+          <div class="paintings-table-header">
+            <h2 style="font-family:var(--font-display);font-size:var(--fs-xl);font-weight:300;color:var(--color-off-white);">Recent Paintings</h2>
+            <button class="btn btn--ghost btn--sm" onclick="document.querySelector('[data-panel=panel-paintings]').click()">View All →</button>
+          </div>
+          <div id="overview-preview" style="padding:var(--space-5);">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <h3>No paintings yet</h3>
+              <p style="margin-bottom:var(--space-5);">Add your first painting to get started.</p>
+              <button class="btn btn--primary" onclick="window.showAddForm()">Add First Painting</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PAINTINGS LIST PANEL ── -->
+      <div class="dashboard-panel" id="panel-paintings" style="display:none;">
+        <div class="dashboard-header">
+          <div>
+            <h1 class="dashboard-title">My Paintings</h1>
+            <p class="dashboard-subtitle">Manage, edit, publish, or remove your paintings.</p>
+          </div>
+          <button class="btn btn--primary" id="addNewBtn2" onclick="window.showAddForm()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add New
+          </button>
+        </div>
+
+        <div class="paintings-table-wrap">
+          <div class="paintings-table-header">
+            <h2 style="font-family:var(--font-display);font-size:var(--fs-xl);font-weight:300;color:var(--color-off-white);">All Paintings</h2>
+            <div style="width:260px;">
+              <input type="search" class="form-input paintings-table-search" placeholder="Search paintings…" aria-label="Search paintings" style="padding:var(--space-2) var(--space-4);height:36px;">
+            </div>
+          </div>
+          <table class="paintings-table" aria-label="Paintings list">
+            <thead>
+              <tr>
+                <th style="width:60px;">Image</th>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Dimensions</th>
+                <th>Status</th>
+                <th style="width:120px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="paintingsTableBody">
+              <tr>
+                <td colspan="6">
+                  <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <h3>No paintings yet</h3>
+                    <p style="margin-bottom:var(--space-5);">Start by adding your first painting to the gallery.</p>
+                    <button class="btn btn--primary" onclick="window.showAddForm()">Add Your First Painting</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── ADD NEW PAINTING PANEL ── -->
+      <div class="dashboard-panel" id="panel-add" style="display:none;">
+        <div class="dashboard-header">
+          <div>
+            <h1 class="dashboard-title" id="formPanelTitle">Add New Painting</h1>
+            <p class="dashboard-subtitle">Fill in the details and upload images. Your draft is saved automatically.</p>
+          </div>
+          <div class="autosave-indicator">
+            <div class="autosave-indicator__dot"></div>
+            <span>Auto-save enabled</span>
+          </div>
+        </div>
+
+        <form class="add-painting-form" id="addPaintingForm" novalidate>
+
+          <!-- Image Upload -->
+          <div style="margin-bottom:var(--space-8);">
+            <div class="add-painting-form .form-section-title" style="font-family:var(--font-display);font-size:var(--fs-xl);font-weight:400;color:var(--color-off-white);margin-bottom:var(--space-5);padding-bottom:var(--space-4);border-bottom:var(--border-subtle);">
+              Painting Images
+            </div>
+
+            <div class="image-uploader" id="imageDropZone" role="button" tabindex="0" aria-label="Upload images">
+              <input type="file" class="image-uploader__input" id="imageFileInput" accept="image/*" multiple aria-hidden="true">
+              <svg class="image-uploader__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <div class="image-uploader__title">Drop images here</div>
+              <p class="image-uploader__hint">or <span>click to browse</span> · PNG, JPG, WEBP up to 20MB · First image is the primary display</p>
+            </div>
+
+            <div class="upload-progress" id="uploadProgress">
+              <div class="upload-progress__bar" id="uploadProgressBar"></div>
+            </div>
+
+            <div class="image-preview-grid" id="imagePreviewGrid"></div>
+          </div>
+
+          <!-- Title & Description -->
+          <div style="margin-bottom:var(--space-8);">
+            <div style="font-family:var(--font-display);font-size:var(--fs-xl);font-weight:400;color:var(--color-off-white);margin-bottom:var(--space-5);padding-bottom:var(--space-4);border-bottom:var(--border-subtle);">
+              Painting Details
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="f-title">
+                Painting Title <span style="color:var(--color-error);">*</span>
+              </label>
+              <input class="form-input" type="text" id="f-title" name="title"
+                placeholder="e.g. Crimson Reverie" maxlength="100" required>
+              <div class="char-counter" id="titleCounter">0 / 100</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="f-description">Description</label>
+              <textarea class="form-textarea" id="f-description" name="description"
+                placeholder="Describe this painting — the inspiration, technique, colors, mood…"
+                maxlength="1000" rows="5"></textarea>
+              <div class="char-counter" id="descCounter">0 / 1000</div>
+            </div>
+          </div>
+
+          <!-- Category, Price, Dims, Medium, Stock -->
+          <div style="margin-bottom:var(--space-8);">
+            <div style="font-family:var(--font-display);font-size:var(--fs-xl);font-weight:400;color:var(--color-off-white);margin-bottom:var(--space-5);padding-bottom:var(--space-4);border-bottom:var(--border-subtle);">
+              Specifications &amp; Pricing
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="f-category">
+                  Category <span style="color:var(--color-error);">*</span>
+                </label>
+                <select class="form-select" id="f-category" name="category" required>
+                  <option value="" disabled selected>Select a category…</option>
+                  <option value="Abstract">Abstract</option>
+                  <option value="Animal Art">Animal Art</option>
+                  <option value="Cityscape">Cityscape</option>
+                  <option value="Figure">Figure</option>
+                  <option value="Flower">Flower</option>
+                  <option value="Landscape">Landscape</option>
+                  <option value="Modern">Modern</option>
+                  <option value="Music">Music</option>
+                  <option value="Oil">Oil</option>
+                  <option value="Seascape">Seascape</option>
+                  <option value="Texture">Texture</option>
+                  <option value="Jackson Pollock Style">Jackson Pollock Style</option>
+                  <option value="Giclée Prints">Giclée Prints</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="f-price">
+                  Price (USD) <span style="color:var(--color-error);">*</span>
+                </label>
+                <input class="form-input" type="number" id="f-price" name="price"
+                  placeholder="e.g. 1200" min="1" step="1" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="f-dimensions">Dimensions</label>
+                <input class="form-input" type="text" id="f-dimensions" name="dimensions"
+                  placeholder='e.g. 24 × 36 inches'>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="f-medium">Medium</label>
+                <input class="form-input" type="text" id="f-medium" name="medium"
+                  placeholder="e.g. Acrylic on Canvas">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="f-stock">Stock Quantity</label>
+                <input class="form-input" type="number" id="f-stock" name="stock"
+                  placeholder="1" min="0" step="1" value="1">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="f-year">Year Created</label>
+                <input class="form-input" type="number" id="f-year" name="year"
+                  placeholder="2024" min="1990" max="2030" value="2024">
+              </div>
+            </div>
+          </div>
+
+          <!-- Visibility -->
+          <div style="margin-bottom:var(--space-8);">
+            <div style="font-family:var(--font-display);font-size:var(--fs-xl);font-weight:400;color:var(--color-off-white);margin-bottom:var(--space-5);padding-bottom:var(--space-4);border-bottom:var(--border-subtle);">
+              Visibility
+            </div>
+            <div style="display:flex;gap:var(--space-4);">
+              <label style="display:flex;align-items:center;gap:var(--space-3);cursor:pointer;padding:var(--space-4) var(--space-5);border:var(--border-medium);border-radius:var(--radius-md);flex:1;transition:border-color var(--duration-fast);" id="visPublished">
+                <input type="radio" name="visibility" value="published" checked style="accent-color:var(--color-gold);width:16px;height:16px;">
+                <div>
+                  <div style="font-size:var(--fs-sm);font-weight:500;color:var(--color-off-white);">Publish Immediately</div>
+                  <div style="font-size:var(--fs-xs);color:var(--color-beige-dim);">Goes live in the gallery right away</div>
+                </div>
+              </label>
+              <label style="display:flex;align-items:center;gap:var(--space-3);cursor:pointer;padding:var(--space-4) var(--space-5);border:var(--border-medium);border-radius:var(--radius-md);flex:1;transition:border-color var(--duration-fast);" id="visDraft">
+                <input type="radio" name="visibility" value="draft" style="accent-color:var(--color-gold);width:16px;height:16px;">
+                <div>
+                  <div style="font-size:var(--fs-sm);font-weight:500;color:var(--color-off-white);">Save as Draft</div>
+                  <div style="font-size:var(--fs-xs);color:var(--color-beige-dim);">Hidden from visitors, publish later</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Form actions -->
+          <div class="form-actions">
+            <button type="button" class="btn btn--ghost" id="cancelFormBtn" onclick="document.querySelector('[data-panel=panel-paintings]').click()">
+              Cancel
+            </button>
+            <button type="button" class="btn btn--outline" id="saveDraftBtn">
+              Save Draft
+            </button>
+            <button type="submit" class="btn btn--primary btn--lg" id="publishBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><polyline points="20 6 9 17 4 12"/></svg>
+              Publish Painting
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ── ORDERS PANEL ── -->
+      <div class="dashboard-panel" id="panel-orders" style="display:none;">
+        <div class="dashboard-header">
+          <div>
+            <h1 class="dashboard-title">Collector Orders</h1>
+            <p class="dashboard-subtitle">Incoming acquisitions, customer details, and shipping fulfillment.</p>
+          </div>
+          <button class="btn btn--outline" id="refreshOrdersBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            Refresh Orders
+          </button>
+        </div>
+
+        <div class="paintings-table-wrap">
+          <table class="paintings-table" id="adminOrdersTable">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Collector</th>
+                <th>Artworks</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Fulfillment</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Populated by js/artist.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── SETTINGS PANEL ── -->
+      <div class="dashboard-panel" id="panel-settings" style="display:none;">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">Settings</h1>
+        </div>
+        <div class="add-painting-form" style="max-width:600px;">
+          <div style="font-family:var(--font-display);font-size:var(--fs-xl);font-weight:400;color:var(--color-off-white);margin-bottom:var(--space-6);padding-bottom:var(--space-4);border-bottom:var(--border-subtle);">
+            Artist Profile
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="s-name">Display Name</label>
+            <input class="form-input" type="text" id="s-name" value="Nandita Albright">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="s-bio">Bio (homepage)</label>
+            <textarea class="form-textarea" id="s-bio" rows="4">Nandita Albright is a self-taught artist whose work draws from the raw energy of the Abstract Expressionists and the meditative traditions of South Asian art.</textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="s-email">Contact Email</label>
+            <input class="form-input" type="email" id="s-email" value="hello@nanditaarts.com">
+          </div>
+          <div class="form-actions">
+            <button class="btn btn--primary" onclick="window.NanditaArts?.showToast('Settings saved')">Save Changes</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="js/theme.js"></script>
+  <script src="js/animations.js" defer></script>
+  <script src="js/artist.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // ── Character counters ──
+      function attachCounter(inputId, counterId, max) {
+        const input = document.getElementById(inputId);
+        const counter = document.getElementById(counterId);
+        if (!input || !counter) return;
+        input.addEventListener('input', () => {
+          const len = input.value.length;
+          counter.textContent = `${len} / ${max}`;
+          counter.classList.toggle('is-near', len > max * 0.8);
+          counter.classList.toggle('is-over', len > max);
+        });
+      }
+      attachCounter('f-title', 'titleCounter', 100);
+      attachCounter('f-description', 'descCounter', 1000);
+
+      // ── Visibility radio highlight ──
+      document.querySelectorAll('input[name="visibility"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+          document.querySelectorAll('label[id^="vis"]').forEach(l => {
+            l.style.borderColor = '';
+          });
+          this.closest('label').style.borderColor = 'var(--color-gold)';
+        });
+      });
+      // Init first
+      document.getElementById('visPublished').style.borderColor = 'var(--color-gold)';
+
+      // ── Add new button on overview ──
+      const addNewBtn = document.getElementById('addNewBtn');
+      if (addNewBtn) addNewBtn.addEventListener('click', () => window.showAddForm());
+
+      // ── Upload progress simulation ──
+      const fileInput = document.getElementById('imageFileInput');
+      if (fileInput) {
+        fileInput.addEventListener('change', () => {
+          const progress = document.getElementById('uploadProgress');
+          const bar = document.getElementById('uploadProgressBar');
+          if (progress && bar && fileInput.files.length > 0) {
+            progress.classList.add('is-visible');
+            let width = 0;
+            const interval = setInterval(() => {
+              width += Math.random() * 15;
+              bar.style.width = Math.min(width, 100) + '%';
+              if (width >= 100) {
+                clearInterval(interval);
+                setTimeout(() => { progress.classList.remove('is-visible'); bar.style.width = '0%'; }, 600);
+              }
+            }, 80);
+          }
+        });
+      }
+
+      // ── Keyboard shortcut: N = new painting ──
+      document.addEventListener('keydown', e => {
+        if (e.key === 'n' && !['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) {
+          window.showAddForm?.();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Studio Checkout — Nandita Arts</title>
+  <meta name="description" content="Secure studio checkout for original paintings by Nandita Albright. Encrypted SSL payment with certificate of authenticity.">
+  <script>
+    (function(){
+      var s = localStorage.getItem('na_theme');
+      var p = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', s || p);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+    body { padding-top: var(--nav-height); background: var(--color-base); }
+    .checkout-wrap {
+      min-height: calc(100vh - var(--nav-height));
+      padding-block: var(--space-10) var(--space-24);
+    }
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: var(--space-12);
+      align-items: start;
+    }
+    @media (max-width: 1024px) {
+      .checkout-layout { grid-template-columns: 1fr; }
+    }
+    .checkout-section {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: var(--border-subtle);
+      padding: var(--space-8);
+      margin-bottom: var(--space-6);
+    }
+    .checkout-section__title {
+      font-family: var(--font-display);
+      font-size: var(--fs-xl);
+      color: var(--color-off-white);
+      margin-bottom: var(--space-6);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(207, 166, 70, 0.15);
+      border: 1px solid var(--color-gold);
+      color: var(--color-gold);
+      font-size: var(--fs-xs);
+      font-family: var(--font-body);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+    @media (max-width: 640px) {
+      .form-grid-2 { grid-template-columns: 1fr; }
+    }
+    .form-field {
+      margin-bottom: var(--space-4);
+      position: relative;
+    }
+    .form-label {
+      display: block;
+      font-size: var(--fs-xs);
+      letter-spacing: var(--ls-wide);
+      text-transform: uppercase;
+      color: var(--color-beige);
+      margin-bottom: var(--space-2);
+    }
+    .form-input, .form-select {
+      width: 100%;
+      background: var(--color-surface-2);
+      border: 1px solid rgba(214, 203, 182, 0.15);
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-4);
+      color: var(--color-off-white);
+      font-size: var(--fs-sm);
+      outline: none;
+      transition: border-color var(--duration-fast), background var(--duration-fast);
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: var(--color-gold);
+      background: rgba(47, 45, 39, 0.95);
+    }
+    .form-input.is-invalid, .form-select.is-invalid {
+      border-color: var(--color-error) !important;
+    }
+    .field-error-msg {
+      display: none;
+      color: #ff6b6b;
+      font-size: 11px;
+      margin-top: 4px;
+      line-height: 1.3;
+    }
+    .field-error-msg.is-visible { display: block; }
+    
+    .shipping-method-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid rgba(214, 203, 182, 0.15);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      margin-bottom: var(--space-3);
+      cursor: pointer;
+      background: var(--color-surface-2);
+      transition: border-color var(--duration-fast);
+    }
+    .shipping-method-option.is-selected {
+      border-color: var(--color-gold);
+      background: rgba(207, 166, 70, 0.08);
+    }
+    .shipping-method-option input {
+      margin-right: var(--space-3);
+      accent-color: var(--color-gold);
+    }
+
+    /* Payment Gateway Selection & Tabs */
+    .gateway-picker {
+      display: flex;
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+    }
+    .gateway-pill {
+      flex: 1;
+      padding: var(--space-3);
+      border: 1px solid rgba(214, 203, 182, 0.2);
+      border-radius: var(--radius-md);
+      background: var(--color-surface-2);
+      color: var(--color-off-white);
+      font-size: var(--fs-xs);
+      cursor: pointer;
+      text-align: center;
+      transition: all var(--duration-fast);
+    }
+    .gateway-pill.is-active {
+      border-color: var(--color-gold);
+      background: rgba(207, 166, 70, 0.12);
+      color: var(--color-gold);
+    }
+
+    .test-mode-banner {
+      background: rgba(207, 166, 70, 0.12);
+      border: 1px dashed var(--color-gold);
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-4);
+      margin-bottom: var(--space-6);
+      font-size: var(--fs-xs);
+      color: var(--color-gold);
+      line-height: var(--lh-normal);
+    }
+
+    .alert-banner {
+      background: rgba(224, 82, 82, 0.12);
+      border: 1px solid var(--color-error);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      margin-bottom: var(--space-6);
+      color: #ff9999;
+      font-size: var(--fs-sm);
+      display: none;
+    }
+    .alert-banner.is-visible { display: block; }
+
+    /* Order summary box on right */
+    .checkout-summary-panel {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: var(--border-subtle);
+      padding: var(--space-8);
+      position: sticky;
+      top: calc(var(--nav-height) + var(--space-6));
+    }
+    .checkout-item-mini {
+      display: flex;
+      gap: var(--space-3);
+      align-items: center;
+      padding-bottom: var(--space-3);
+      margin-bottom: var(--space-3);
+      border-bottom: var(--border-subtle);
+    }
+    .checkout-item-mini img {
+      width: 54px;
+      height: 68px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+    }
+  </style>
+</head>
+<body>
+  <!-- ══ NAVIGATION ══ -->
+  <nav class="nav is-scrolled" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo" aria-label="Nandita Arts home">
+        <span class="brand-mark" title="Nandita Albright Studio">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.71a.996.996 0 0 0-1.41 0l-9.5 9.5c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l9.5-9.5c.39-.39.39-1.02 0-1.41z"/>
+          </svg>
+        </span>
+        <div class="nav__logo-text">Nandita Arts<span class="nav__logo-sub">Studio Checkout</span></div>
+      </a>
+      <ul class="nav__links" role="list">
+        <li><a href="gallery.html" class="nav__link">Gallery</a></li>
+        <li><a href="cart.html" class="nav__link">Review Cart</a></li>
+      </ul>
+      <div class="nav__actions">
+        <!-- Dark / Light Theme Toggle -->
+        <button class="theme-toggle-btn nav__icon-btn" aria-label="Switch Theme" title="Toggle Light/Dark Gallery">
+          <svg class="theme-toggle-btn__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-toggle-btn__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <div style="font-size:var(--fs-xs);color:var(--color-gold);display:flex;align-items:center;gap:6px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <span>256-Bit SSL Encrypted</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="checkout-wrap">
+    <div class="container">
+      <div id="checkoutAlert" class="alert-banner" role="alert"></div>
+
+      <div class="checkout-layout">
+        <!-- Left Column: Checkout Form Steps -->
+        <div>
+          <form id="checkoutForm" novalidate>
+            <!-- Step 1: Contact Information -->
+            <section class="checkout-section">
+              <h2 class="checkout-section__title">
+                <span class="step-num">1</span>
+                <span>Contact Details</span>
+              </h2>
+
+              <div class="form-grid-2">
+                <div class="form-field">
+                  <label class="form-label" for="custName">Full Name *</label>
+                  <input type="text" id="custName" class="form-input" placeholder="e.g. Eleanor Vance" required autocomplete="name">
+                  <div class="field-error-msg" id="errCustName">Please enter your full name for delivery records.</div>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label" for="custEmail">Email Address (for Order Receipt) *</label>
+                  <input type="email" id="custEmail" class="form-input" placeholder="e.g. eleanor@example.com" required autocomplete="email">
+                  <div class="field-error-msg" id="errCustEmail">Please provide a valid email address so we can send your confirmation receipt.</div>
+                </div>
+              </div>
+
+              <div class="form-field" style="margin-bottom:0;">
+                <label class="form-label" for="custPhone">Phone Number (for Courier Delivery updates) *</label>
+                <input type="tel" id="custPhone" class="form-input" placeholder="e.g. +1 (555) 234-5678" required autocomplete="tel">
+                <div class="field-error-msg" id="errCustPhone">Please enter your telephone number in case the courier requires delivery coordinates.</div>
+              </div>
+            </section>
+
+            <!-- Step 2: Shipping Destination -->
+            <section class="checkout-section">
+              <h2 class="checkout-section__title">
+                <span class="step-num">2</span>
+                <span>Shipping Address</span>
+              </h2>
+
+              <div class="form-field">
+                <label class="form-label" for="shipAddress">Street Address *</label>
+                <input type="text" id="shipAddress" class="form-input" placeholder="e.g. 742 Evergreen Terrace" required autocomplete="street-address">
+                <div class="field-error-msg" id="errShipAddress">Please enter your street address.</div>
+              </div>
+
+              <div class="form-field">
+                <label class="form-label" for="shipApt">Apartment, Suite, Unit (Optional)</label>
+                <input type="text" id="shipApt" class="form-input" placeholder="e.g. Apt 4B">
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-field">
+                  <label class="form-label" for="shipCity">City *</label>
+                  <input type="text" id="shipCity" class="form-input" placeholder="e.g. Seattle" required autocomplete="address-level2">
+                  <div class="field-error-msg" id="errShipCity">Please enter your city.</div>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label" for="shipState">State / Province *</label>
+                  <input type="text" id="shipState" class="form-input" placeholder="e.g. Washington" required autocomplete="address-level1">
+                  <div class="field-error-msg" id="errShipState">Please enter your state or province.</div>
+                </div>
+              </div>
+
+              <div class="form-grid-2" style="margin-bottom:0;">
+                <div class="form-field">
+                  <label class="form-label" for="shipZip">ZIP / Postal Code *</label>
+                  <input type="text" id="shipZip" class="form-input" placeholder="e.g. 98101" required autocomplete="postal-code">
+                  <div class="field-error-msg" id="errShipZip">Please enter your postal code.</div>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-label" for="shipCountry">Country *</label>
+                  <select id="shipCountry" class="form-select">
+                    <option value="United States" selected>United States</option>
+                    <option value="India">India</option>
+                    <option value="Canada">Canada</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="Australia">Australia</option>
+                    <option value="Germany">Germany</option>
+                    <option value="France">France</option>
+                    <option value="Other">International (Other)</option>
+                  </select>
+                </div>
+              </div>
+            </section>
+
+            <!-- Step 3: Shipping Method Selection -->
+            <section class="checkout-section">
+              <h2 class="checkout-section__title">
+                <span class="step-num">3</span>
+                <span>Studio Delivery Service</span>
+              </h2>
+
+              <label class="shipping-method-option is-selected" id="optStandard">
+                <div style="display:flex;align-items:center;">
+                  <input type="radio" name="shippingMethod" value="standard" checked>
+                  <div>
+                    <strong style="color:var(--color-off-white);font-size:var(--fs-sm);">Standard Studio Delivery (Insured)</strong>
+                    <div style="font-size:var(--fs-xs);color:var(--color-beige-dim);margin-top:2px;">Custom wooden art box, 5–7 business days transit with tracking.</div>
+                  </div>
+                </div>
+                <span id="standardShipCostLabel" style="font-size:var(--fs-sm);color:var(--color-gold);">$25.00</span>
+              </label>
+
+              <label class="shipping-method-option" id="optExpress">
+                <div style="display:flex;align-items:center;">
+                  <input type="radio" name="shippingMethod" value="express">
+                  <div>
+                    <strong style="color:var(--color-off-white);font-size:var(--fs-sm);">Express Courier & White-Glove Care</strong>
+                    <div style="font-size:var(--fs-xs);color:var(--color-beige-dim);margin-top:2px;">Priority handling, expedited 2–3 business days flight courier.</div>
+                  </div>
+                </div>
+                <span style="font-size:var(--fs-sm);color:var(--color-gold);">$65.00</span>
+              </label>
+            </section>
+
+            <!-- Step 4: Secure Payment Gateway -->
+            <section class="checkout-section">
+              <h2 class="checkout-section__title">
+                <span class="step-num">4</span>
+                <span>Payment Method</span>
+              </h2>
+
+              <!-- Gateway Selector Tabs -->
+              <div class="gateway-picker">
+                <button type="button" class="gateway-pill is-active" data-gw="stripe">Credit / Debit Card (Stripe)</button>
+                <button type="button" class="gateway-pill" data-gw="razorpay">Razorpay / UPI / NetBanking</button>
+              </div>
+
+              <div class="test-mode-banner">
+                <strong>⚡ Test Mode Active:</strong> You can place a sample collector order using test card: 
+                <code style="background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:4px;">4242 4242 4242 4242</code> · Any future expiration &amp; CVV <code>123</code>.
+              </div>
+
+              <!-- Stripe / Card Panel -->
+              <div id="stripePaymentPanel">
+                <div class="form-field">
+                  <label class="form-label" for="cardNum">Card Number *</label>
+                  <input type="text" id="cardNum" class="form-input" placeholder="4242 4242 4242 4242" maxlength="19" required>
+                  <div class="field-error-msg" id="errCardNum">Please enter a valid card number (or use test card 4242...).</div>
+                </div>
+
+                <div class="form-grid-2">
+                  <div class="form-field">
+                    <label class="form-label" for="cardExp">Expiration Date (MM/YY) *</label>
+                    <input type="text" id="cardExp" class="form-input" placeholder="MM/YY" maxlength="5" required>
+                    <div class="field-error-msg" id="errCardExp">Please enter expiration date (e.g. 12/28).</div>
+                  </div>
+
+                  <div class="form-field">
+                    <label class="form-label" for="cardCvv">Security Code (CVV) *</label>
+                    <input type="password" id="cardCvv" class="form-input" placeholder="CVC" maxlength="4" required>
+                    <div class="field-error-msg" id="errCardCvv">Please enter 3 or 4 digit security code.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Razorpay / UPI Panel -->
+              <div id="razorpayPaymentPanel" style="display:none;">
+                <div style="background:var(--color-surface-2);border-radius:var(--radius-md);padding:var(--space-4);margin-bottom:var(--space-4);font-size:var(--fs-xs);color:var(--color-beige);">
+                  <p style="margin-bottom:var(--space-2);"><strong style="color:var(--color-off-white);">Razorpay Domestic / International Payment Gateway:</strong></p>
+                  <p>Supports Indian UPI (Google Pay, PhonePe, Paytm), NetBanking across 50+ Indian banks, RuPay cards, and international cards.</p>
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="upiId">UPI ID / VPA (Optional for direct UPI)</label>
+                  <input type="text" id="upiId" class="form-input" placeholder="yourname@okhdfcbank">
+                </div>
+              </div>
+
+              <div style="margin-top:var(--space-6);">
+                <button type="submit" id="submitOrderBtn" class="btn btn--primary btn--wide btn--lg">
+                  Place Studio Order · <span id="btnPayTotal">$0.00</span>
+                </button>
+              </div>
+
+              <p style="text-align:center;margin-top:var(--space-4);font-size:var(--fs-xs);color:var(--color-beige-dim);line-height:var(--lh-normal);">
+                By placing this order, you authorize Nandita Arts to charge your selected payment method. 
+                Original artworks are insured and accompanied by a signed Certificate of Authenticity.
+              </p>
+            </section>
+          </form>
+        </div>
+
+        <!-- Right Column: Order Summary -->
+        <aside class="checkout-summary-panel">
+          <h2 style="font-family:var(--font-display);font-size:var(--fs-xl);color:var(--color-off-white);margin-bottom:var(--space-4);">Order Summary</h2>
+          
+          <div id="checkoutMiniItems"></div>
+
+          <div class="summary-line" style="margin-top:var(--space-4);">
+            <span>Artworks Subtotal</span>
+            <span id="sumSubtotal">$0.00</span>
+          </div>
+
+          <div class="summary-line" id="sumDiscountRow" style="display:none;color:var(--color-gold);">
+            <span>Studio Privilege (10%)</span>
+            <span id="sumDiscount">−$0.00</span>
+          </div>
+
+          <div class="summary-line">
+            <span>Shipping</span>
+            <span id="sumShipping">$0.00</span>
+          </div>
+
+          <div class="summary-line">
+            <span>Estimated Tax (6.5%)</span>
+            <span id="sumTax">$0.00</span>
+          </div>
+
+          <div class="summary-line summary-line--total">
+            <span>Total Payable</span>
+            <span id="sumGrandTotal" style="color:var(--color-gold);">$0.00</span>
+          </div>
+
+          <div style="margin-top:var(--space-6);padding-top:var(--space-4);border-top:var(--border-subtle);font-size:var(--fs-xs);color:var(--color-beige-dim);line-height:var(--lh-relaxed);">
+            <div style="display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-2);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-gold);"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>100% Guaranteed Authenticity by the Artist</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-2);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-gold);"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Free returns within 14 days of receipt</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--space-2);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-gold);"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Ships in reinforced archival wood box</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/theme.js"></script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/animations.js" defer></script>
+  <script src="js/checkout.js" defer></script>
+</body>
+</html>
