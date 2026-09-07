@@ -159,3 +159,9 @@
   --shadow-xl:           0 32px 64px rgba(80, 60, 35, 0.16);
 }
 
+@media (max-width: 768px) {
+  :root {
+    --nav-height: 64px;
+  }
+}
+
